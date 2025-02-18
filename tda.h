@@ -14,7 +14,7 @@ void tda_init()
   {
     cur_volume = 20;
   }
-  
+
   readCurInput();
   setInputData(cur_input);
   printCurScreen();
@@ -48,9 +48,24 @@ void setInputData(TDA7439_input _input)
   tda.setSnd(cur_data.middle, MIDDLE);
   tda.setSnd(cur_data.trebble, TREBBLE);
   tda.inputGain(cur_data.input_gain);
-  // баланс
+  setBalance(cur_data.balance);
 
   tda.setVolume(cur_volume);
+}
+
+void setBalance(int8_t _balance)
+{
+  if (_balance > 21)
+  {
+    _balance = 21;
+  }
+  else if (_balance < -21)
+  {
+    _balance = -21;
+  }
+  uint8_t right = (_balance < 0) ? 21 + _balance : 21;
+  uint8_t left = (_balance > 0) ? 21 - _balance : 21;
+  tda.spkAtt((79 - right), (79 - left));
 }
 
 #endif // TDA_H

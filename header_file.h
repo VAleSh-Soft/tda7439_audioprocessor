@@ -106,6 +106,7 @@ void setBacklight(bool flag);         // управление подсветко
 void tda_init();
 void readCurInput();                     // получение сохраненного значения входа из EEPROM
 void setInputData(TDA7439_input _input); // первоначальная настройка TDA7439 для текущего входа
+void setBalance(int8_t _balance);           // установка баланса
 
 // ===================================================
 
