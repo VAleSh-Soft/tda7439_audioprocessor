@@ -53,6 +53,8 @@ void checkRotary()
         }
         digitalWrite(BT_POWER_PIN, bt_pwr);
 
+        saveSettingsInEeprom();
+
         setInputData(next_input);
         cur_mode = SET_VOLUME;
         printCurScreen();
@@ -148,7 +150,6 @@ void returnToDefMode()
 void saveSettingsInEeprom()
 {
   write_eeprom_8(EEPROM_INDEX_FOR_VOLUME, cur_volume);
-  write_eeprom_8(EEPROM_INDEX_FOR_INPUT, cur_input);
   writeInputData(cur_data, cur_input);
   tasks.stopTask(save_settings_in_eeprom);
 }
