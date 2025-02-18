@@ -39,7 +39,7 @@ void printInData(bool bt)
   }
   else
   {
-    display.print((uint8_t)cur_input);
+    display.print(4 - (uint8_t)cur_input);
     display.print(" ");
   }
 }
@@ -92,7 +92,7 @@ Serial.println(x);
 void printCurScreen()
 {
   display.clear();
-  printInData(cur_input);
+  printInData();
 
   int8_t _data;
 
