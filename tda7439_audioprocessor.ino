@@ -45,6 +45,14 @@ void checkRotary()
       new_input = false;
       if (next_input != cur_input)
       {
+        // для четвертого канала включим питание Bt-модуля
+        uint8_t bt_pwr = cur_input == INPUT_4;
+        if (!BT_CONTROL_LEVEL)
+        {
+          bt_pwr = !bt_pwr;
+        }
+        digitalWrite(BT_POWER_PIN, bt_pwr);
+
         setInputData(next_input);
         cur_mode = SET_VOLUME;
         printCurScreen();
@@ -78,7 +86,7 @@ static void _change_data(int8_t &_data, int8_t _min, int8_t _max, bool _up)
 
 void changeCurData(bool _up)
 {
-    int8_t x;
+  int8_t x;
   switch (cur_mode)
   {
   case SET_VOLUME:
@@ -149,7 +157,10 @@ void saveSettingsInEeprom()
 
 void setup()
 {
-  Serial.begin(115200);
+  // Serial.begin(115200);
+
+  digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
+  pinMode(BT_POWER_PIN, OUTPUT);
 
   return_to_default_mode = tasks.addTask(TIMEOUT_OF_RETURN_TO_DEFMODE * 1000, returnToDefMode, false);
   save_settings_in_eeprom = tasks.addTask(TIMEOUT_OF_AUTOSAVE_DATA * 1000, saveSettingsInEeprom, false);
