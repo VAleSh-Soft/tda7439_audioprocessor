@@ -65,7 +65,7 @@ void setBalance(int8_t _balance)
   }
   uint8_t right = (_balance < 0) ? 21 + _balance : 21;
   uint8_t left = (_balance > 0) ? 21 - _balance : 21;
-  tda.spkAtt((79 - right), (79 - left));
+  tda.spkAtt(right, left);
 }
 
 #endif // TDA_H

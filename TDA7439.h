@@ -217,8 +217,8 @@ void TDA7439::spkAtt(uint8_t att_r, uint8_t att_l)
     att_r = 79;
   }
 
-  writeWire(TDA7439_RATT, att_r);
-  writeWire(TDA7439_LATT, att_l);
+  writeWire(TDA7439_RATT, (79 - att_r));
+  writeWire(TDA7439_LATT, (79 - att_l));
 }
 
 void TDA7439::writeWire(uint8_t reg, uint8_t data)
