@@ -18,10 +18,10 @@ void checkRotary()
       switch (enc_res)
       {
       case DIR_CW:
-        next_input--;
+        next_input++;
         break;
       case DIR_CCW:
-        next_input++;
+        next_input--;
         break;
       }
     }
