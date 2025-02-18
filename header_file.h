@@ -182,7 +182,7 @@ TDA7439_input next_input = INPUT_1; // вход для переключения
 bool new_input = false;             // флаг необходимости переключения входа
 
 uint8_t cur_volume = 20; // текущая громкость
-bool mute = false;       // флаг отключения звука
+bool mute_flag = false;       // флаг отключения звука
 TDA_DATA cur_data;       // данные для настройки текущего канала
 
 int8_t dir = 0;

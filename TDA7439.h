@@ -98,7 +98,7 @@ enum TDA7439_bands : uint8_t
 
 // TDA7439 диапазон громкости (-db)
 // 0x00 .. 0x2F
-#define TDA7439_MUTE 0x38 // отключение звука (mute)
+#define TDA7439_MUTE 0x38 // отключение звука (mute_flag)
 
 class TDA7439
 {
@@ -149,7 +149,7 @@ public:
 	 * @brief отключение звука
 	 *
 	 */
-	void mute();
+	void mute_flag();
 
 	/**
 	 * @brief установка баланса
@@ -199,14 +199,14 @@ void TDA7439::setSnd(int8_t val, TDA7439_bands range)
   writeWire((uint8_t)range, val);
 }
 
-void TDA7439::mute()
+void TDA7439::mute_flag()
 {
   writeWire(TDA7439_VOLUME, TDA7439_MUTE);
 }
 
 void TDA7439::spkAtt(uint8_t att_r, uint8_t att_l)
 {
-  // Mainly used to override the default attenuation of mute at power up
+  // Mainly used to override the default attenuation of mute_flag at power up
   // can be used for balance with some simple code changes here.
   if (att_l > 79)
   {

@@ -65,8 +65,8 @@ void checkRotary()
     printCurScreen();
     break;
   case BTN_LONGCLICK:
-    mute = !mute;
-    (mute) ? tda.mute() : tda.setVolume(cur_volume);
+    mute_flag = !mute_flag;
+    (mute_flag) ? tda.mute_flag() : tda.setVolume(cur_volume);
     break;
   }
 }
@@ -93,7 +93,7 @@ void changeCurData(bool _up)
     x = cur_volume;
     _change_data(x, 0, 47, _up);
     cur_volume = x;
-    mute = false;
+    mute_flag = false;
     tda.setVolume(cur_volume);
     printNumData(cur_volume);
     printProgressBar(cur_volume);
