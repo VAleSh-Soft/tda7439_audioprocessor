@@ -4,6 +4,41 @@
 #include <EEPROM.h>
 #include "header_file.h"
 
+// ===================================================
+
+#if (__USE_ARDUINO_ESP__ || defined(ARDUINO_ARCH_RP2040)) && \
+    (__USE_OTHER_SETTING__ || __USE_ON_OFF_DATA__)
+#define __USE_EEPROM_IN_FLASH__ 1
+#ifndef EEPROM_SIZE
+#define EEPROM_SIZE 256
+#endif
+#else
+#define __USE_EEPROM_IN_FLASH__ 0
+#endif
+
+// ===================================================
+
+#if __USE_EEPROM_IN_FLASH__
+void eeprom_update(uint16_t _index, uint8_t _data)
+{
+  if (EEPROM.read(_index) != _data)
+  {
+    EEPROM.write(_index, _data);
+    EEPROM.commit();
+  }
+}
+
+void eeprom_init(uint16_t _eeprom_size)
+{
+  EEPROM.end();
+  if (_eeprom_size > 4096u || _eeprom_size == 0)
+  {
+    _eeprom_size = 4096;
+  }
+  EEPROM.begin(_eeprom_size);  
+}
+#endif
+
 uint8_t read_eeprom_8(uint16_t _index)
 {
   uint8_t result = EEPROM.read(_index);
@@ -12,7 +47,11 @@ uint8_t read_eeprom_8(uint16_t _index)
 
 void write_eeprom_8(uint16_t _index, uint8_t _data)
 {
+#if __USE_EEPROM_IN_FLASH__
+  eeprom_update(_index, _data);
+#else
   EEPROM.update(_index, _data);
+#endif
 }
 
 static uint16_t _get_index(TDA7439_input _input)

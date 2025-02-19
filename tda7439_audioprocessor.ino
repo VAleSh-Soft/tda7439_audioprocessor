@@ -12,9 +12,10 @@ void checkRotary()
   {
     if (btn.isButtonClosed())
     {
+      new_input = true;
       // переключение текущего входа
       cur_mode = SET_INPUT;
-      new_input = true;
+      printCurScreen();
       switch (enc_res)
       {
       case DIR_CW:
@@ -24,6 +25,7 @@ void checkRotary()
         next_input--;
         break;
       }
+      printBigChar(4 - (uint8_t)next_input);
     }
     else
     {
@@ -54,11 +56,10 @@ void checkRotary()
         digitalWrite(BT_POWER_PIN, bt_pwr);
 
         saveSettingsInEeprom();
-
-        setInputData(next_input);
-        cur_mode = SET_VOLUME;
-        printCurScreen();
       }
+      setInputData(next_input);
+      cur_mode = SET_VOLUME;
+      printCurScreen();
     }
     break;
   case BTN_DBLCLICK:
@@ -160,12 +161,24 @@ void setup()
 {
   // Serial.begin(115200);
 
+// ---------------------------------------------------
+
   digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
   pinMode(BT_POWER_PIN, OUTPUT);
+  pinMode(BT_LED_PIN, OUTPUT);
+  pinMode(MUTE_LED_PIN, OUTPUT);
+
+// ---------------------------------------------------
 
   return_to_default_mode = tasks.addTask(TIMEOUT_OF_RETURN_TO_DEFMODE * 1000, returnToDefMode, false);
   save_settings_in_eeprom = tasks.addTask(TIMEOUT_OF_AUTOSAVE_DATA * 1000, saveSettingsInEeprom, false);
 
+// ---------------------------------------------------
+
+#if __USE_EEPROM_IN_FLASH__
+  // инициализация EEPROM
+  eeprom_init(EEPROM_SIZE);
+#endif
   display_init();
   enc.begin(true);
   tda_init();

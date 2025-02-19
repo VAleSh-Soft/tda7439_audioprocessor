@@ -8,8 +8,8 @@
 
 // ===================================================
 
-constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 6; // таймаут автовозврата в режим по умолчанию, секунд
-constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;     // таймаут задержки автосохранения настроек, секунд
+constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 10; // таймаут автовозврата в режим по умолчанию, секунд
+constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут задержки автосохранения настроек, секунд
 
 constexpr uint8_t BT_CONTROL_LEVEL = HIGH; // управляющий уровень для включения модуля Bt
 
@@ -17,6 +17,8 @@ constexpr uint8_t ENC_A_PIN = 3;    // пин A энкодера (CLK)
 constexpr uint8_t ENC_B_PIN = 2;    // пин B энкодера (DT)
 constexpr uint8_t BUTTON_PIN = 4;   // пин кнопки энкодера (SW)
 constexpr uint8_t BT_POWER_PIN = 5; // пин для управления питанием Bt-модуля
+constexpr uint8_t MUTE_LED_PIN = 8;   // пин кнопки энкодера (SW)
+constexpr uint8_t BT_LED_PIN = 8; // пин для управления питанием Bt-модуля
 
 constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10; // индекс в EEPROM для сохранения текущей громкости (1 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_INPUT = 11;  // индекс в EEPROM для сохранения текущего входа (1 байт)
@@ -98,11 +100,12 @@ void writeInputData(TDA_DATA &_data, TDA7439_input _input); // запись да
 // ==== display_LCD_I2C.h ============================
 
 void display_init();
-void printNumData(int8_t number);    // вывод цифрового значения текущего параметра в правом верхнем углу экрана
-void printInData(bool bt = true);    // вывод номера текущего входа в левом верхнем углу экрана
-void printProgressBar(int8_t _data); //  вывод прогресс-бара
-void printCurScreen();               // отрисовка текущего экрана
-void setBacklight(bool flag);        // управление подсветкой экрана
+void printBigChar(uint8_t x); // вывод больших символов
+void printNumData(int8_t number);             // вывод цифрового значения текущего параметра в правом верхнем углу экрана
+void printInData(bool bt = true);             // вывод номера текущего входа в левом верхнем углу экрана
+void printProgressBar(int8_t _data);          //  вывод прогресс-бара
+void printCurScreen();                        // отрисовка текущего экрана
+void setBacklight(bool flag);                 // управление подсветкой экрана
 
 // ==== tda.h =========================================
 
@@ -115,6 +118,8 @@ void setBalance(int8_t _balance);        // установка баланса
 
 shHandle return_to_default_mode;
 shHandle save_settings_in_eeprom;
+// shHandle power_shutdown_monitor;
+// shHandle led_guard;
 
 shTaskManager tasks(2);
 
@@ -182,7 +187,7 @@ TDA7439_input next_input = INPUT_1; // вход для переключения
 bool new_input = false;             // флаг необходимости переключения входа
 
 uint8_t cur_volume = 20; // текущая громкость
-bool mute_flag = false;       // флаг отключения звука
+bool mute_flag = false;  // флаг отключения звука
 TDA_DATA cur_data;       // данные для настройки текущего канала
 
 int8_t dir = 0;

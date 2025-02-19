@@ -2,17 +2,162 @@
 #define DISPLAY_LCD_I2C_H
 
 #include <LiquidCrystal_PCF8574.h> // https://github.com/mathertel/LiquidCrystal_PCF8574
+#if defined(ARDUINO_ARCH_ESP32)
+#include <pgmspace.h>
+#else
+#include <avr/pgmspace.h>
+#endif
 #include "header_file.h"
 
 // ===================================================
 
 LiquidCrystal_PCF8574 display(0x27);
 
-// ===================================================
+// ==== отрисовка больших цифр =======================
 
+// массивы для отрисовки сегментов цифр
+static uint8_t const LT[8] PROGMEM =
+    {
+        0b00111,
+        0b01111,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11111};
+
+static uint8_t const UB[8] PROGMEM =
+    {
+        0b11111,
+        0b11111,
+        0b11111,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000};
+
+static uint8_t const RT[8] PROGMEM =
+    {
+        0b11100,
+        0b11110,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11111};
+
+static uint8_t const LL[8] PROGMEM =
+    {
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b11000,
+        0b11100,
+        0b11110};
+
+static uint8_t const LB[8] PROGMEM =
+    {
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b11111,
+        0b11111,
+        0b11111};
+
+static uint8_t const LR[8] PROGMEM =
+    {
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11111,
+        0b11110,
+        0b11100};
+
+static uint8_t const MB[8] PROGMEM =
+    {
+        0b11111,
+        0b11111,
+        0b11111,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b11111,
+        0b11111};
+
+static uint8_t const BM[8] PROGMEM =
+    {
+        0b11111,
+        0b11111,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b11111,
+        0b11111,
+        0b11111};
+
+// массивы сегментов для отрисовки цифр
+uint8_t const PROGMEM nums[]{
+    0x20, 0x20, 0x20, 0x20, 0x20, 0x20, // space
+    0x01, 0x02, 0x20, 0x04, 0xFF, 0x04, // 1
+    0x01, 0x01, 0x02, 0x00, 0x07, 0x07, // 2
+    0x01, 0x06, 0x02, 0x04, 0x04, 0x05, // 3
+    0xFF, 0x04, 0x03, 0xFF, 0x04, 0x05, // b
+    0x01, 0xFF, 0x01, 0x20, 0xFF, 0x20  // T
+};
+
+// ===================================================
 void display_init()
 {
   display.begin(16, 2);
+
+  display.createChar(0, LT);
+  display.createChar(1, UB);
+  display.createChar(2, RT);
+  display.createChar(3, LL);
+  display.createChar(4, LB);
+  display.createChar(5, LR);
+  display.createChar(6, MB);
+  display.createChar(7, BM);
+}
+
+static void _print_bc(uint8_t offset, uint8_t x)
+{
+  display.setCursor(offset, 0);
+  for (uint8_t i = 0; i < 3; i++)
+  {
+    display.write(pgm_read_byte(&nums[x * 6 + i]));
+  }
+  display.setCursor(offset, 1);
+  for (uint8_t i = 3; i < 6; i++)
+  {
+    display.write(pgm_read_byte(&nums[x * 6 + i]));
+  }
+}
+
+void printBigChar(uint8_t x)
+{
+  const uint8_t offset = 10;
+  if (x > 0 && x <= 4)
+  {
+    _print_bc(offset, x);
+    if (x == 4)
+    {
+      _print_bc(offset + 3, 5);
+    }
+    else
+    {
+      _print_bc(offset + 3, 0);
+    }
+  }
 }
 
 void printNumData(int8_t number)
@@ -67,7 +212,6 @@ void printProgressBar(int8_t _data)
   case SET_BALANCE:
     x = _data / 3 + 7;
     flat = false;
-Serial.println(x);
     break;
   default:
     break;
@@ -133,6 +277,11 @@ void printCurScreen()
   }
   else
   {
+    display.setCursor(3, 0);
+    display.print(F("Next"));
+    display.setCursor(3, 1);
+    display.print(F("input"));
+    printBigChar(4 - (uint8_t)next_input);
   }
 }
 
