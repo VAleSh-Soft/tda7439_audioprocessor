@@ -149,7 +149,7 @@ public:
 	 * @brief отключение звука
 	 *
 	 */
-	void mute_flag();
+	void mute();
 
 	/**
 	 * @brief установка баланса
@@ -199,7 +199,7 @@ void TDA7439::setSnd(int8_t val, TDA7439_bands range)
   writeWire((uint8_t)range, val);
 }
 
-void TDA7439::mute_flag()
+void TDA7439::mute()
 {
   writeWire(TDA7439_VOLUME, TDA7439_MUTE);
 }

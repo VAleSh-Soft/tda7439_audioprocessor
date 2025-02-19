@@ -69,7 +69,15 @@ void checkRotary()
     break;
   case BTN_LONGCLICK:
     mute_flag = !mute_flag;
-    (mute_flag) ? tda.mute_flag() : tda.setVolume(cur_volume);
+    if (mute_flag)
+    {
+      tda.mute();
+      tasks.taskExes(led_guard);
+    }
+    else
+    {
+      tda.setVolume(cur_volume);
+    }
     break;
   }
 }
@@ -155,25 +163,46 @@ void saveSettingsInEeprom()
   tasks.stopTask(save_settings_in_eeprom);
 }
 
+void ledGuard()
+{
+  static bool flag;
+  if (!mute_flag)
+  {
+    digitalWrite(MUTE_LED_PIN, LOW);
+    tasks.stopTask(led_guard);
+  }
+  else
+  {
+    if (!tasks.getTaskState(led_guard))
+    {
+      tasks.startTask(led_guard);
+      flag = true;
+    }
+
+    digitalWrite(MUTE_LED_PIN, flag);
+    flag = !flag;
+  }
+}
+
 // ===================================================
 
 void setup()
 {
   // Serial.begin(115200);
 
-// ---------------------------------------------------
+  // ---------------------------------------------------
 
   digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
   pinMode(BT_POWER_PIN, OUTPUT);
-  pinMode(BT_LED_PIN, OUTPUT);
   pinMode(MUTE_LED_PIN, OUTPUT);
 
-// ---------------------------------------------------
+  // ---------------------------------------------------
 
   return_to_default_mode = tasks.addTask(TIMEOUT_OF_RETURN_TO_DEFMODE * 1000, returnToDefMode, false);
   save_settings_in_eeprom = tasks.addTask(TIMEOUT_OF_AUTOSAVE_DATA * 1000, saveSettingsInEeprom, false);
+  led_guard = tasks.addTask(500ul, ledGuard, false);
 
-// ---------------------------------------------------
+  // ---------------------------------------------------
 
 #if __USE_EEPROM_IN_FLASH__
   // инициализация EEPROM

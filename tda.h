@@ -33,7 +33,7 @@ void readCurInput()
 
 void setInputData(TDA7439_input _input)
 {
-  tda.mute_flag();
+  tda.mute();
 
   tda.setInput(_input);
   cur_input = _input;
