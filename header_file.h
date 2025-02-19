@@ -168,10 +168,6 @@ public:
       setBacklight(true);
       tasks.startTask(return_to_default_mode);
       tasks.startTask(save_settings_in_eeprom);
-      if (btn.isButtonClosed())
-      {
-        btn.resetButtonState();
-      }
     }
     return (_state);
   }
@@ -188,6 +184,7 @@ bool new_input = false;             // флаг необходимости пе�
 
 uint8_t cur_volume = 20; // текущая громкость
 bool mute_flag = false;  // флаг отключения звука
+bool no_mute = false;    // флаг запрета отключения звука
 TDA_DATA cur_data;       // данные для настройки текущего канала
 
 int8_t dir = 0;

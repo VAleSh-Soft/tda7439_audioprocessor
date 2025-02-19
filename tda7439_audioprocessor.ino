@@ -13,6 +13,8 @@ void checkRotary()
     if (btn.isButtonClosed())
     {
       new_input = true;
+      no_mute = true;
+      btn.resetButtonState();
       // переключение текущего входа
       cur_mode = SET_INPUT;
       printCurScreen();
@@ -61,6 +63,7 @@ void checkRotary()
       cur_mode = SET_VOLUME;
       printCurScreen();
     }
+    no_mute = false;
     break;
   case BTN_DBLCLICK:
     // вход в режим установки предусиления
@@ -68,15 +71,18 @@ void checkRotary()
     printCurScreen();
     break;
   case BTN_LONGCLICK:
-    mute_flag = !mute_flag;
-    if (mute_flag)
+    if (!no_mute)
     {
-      tda.mute();
-      tasks.taskExes(led_guard);
-    }
-    else
-    {
-      tda.setVolume(cur_volume);
+      mute_flag = !mute_flag;
+      if (mute_flag)
+      {
+        tda.mute();
+        tasks.taskExes(led_guard);
+      }
+      else
+      {
+        tda.setVolume(cur_volume);
+      }
     }
     break;
   }
