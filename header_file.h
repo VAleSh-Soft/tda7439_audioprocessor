@@ -13,8 +13,8 @@ constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут заде
 
 constexpr uint8_t BT_CONTROL_LEVEL = HIGH; // управляющий уровень для включения модуля Bt
 
-constexpr uint8_t ENC_A_PIN = 3;    // пин A энкодера (CLK)
-constexpr uint8_t ENC_B_PIN = 2;    // пин B энкодера (DT)
+constexpr uint8_t ENC_A_PIN = 3;    // пин A энкодера (DT)
+constexpr uint8_t ENC_B_PIN = 2;    // пин B энкодера (CLK)
 constexpr uint8_t BUTTON_PIN = 4;   // пин кнопки энкодера (SW)
 constexpr uint8_t BT_POWER_PIN = 5; // пин для управления питанием Bt-модуля
 constexpr uint8_t MUTE_LED_PIN = 8; // пин светодиода mute
@@ -111,10 +111,11 @@ void setBacklight(bool flag);        // управление подсветко�
 // ==== tda.h =========================================
 
 void tda_init();
-TDA7439_input readCurInput();                       // получение сохраненного значения входа из EEPROM
-void setInputData(TDA7439_input _input);   // первоначальная настройка TDA7439 для текущего входа
-void setBalance(int8_t _balance);          // установка баланса
-void switchingInput(TDA7439_input _input, bool _init = false); // переключение входа
+TDA7439_input readCurInput();            // получение сохраненного значения входа из EEPROM
+void setInputData(TDA7439_input _input); // первоначальная настройка TDA7439 для текущего входа
+void setBalance(int8_t _balance);        // установка баланса
+void switchingInput(TDA7439_input _input,
+                    bool _init = false); // переключение входа
 
 // ===================================================
 

@@ -62,7 +62,6 @@ void checkRotary()
       if (mute_flag)
       {
         tda.mute();
-        tasks.taskExes(led_guard);
       }
       else
       {
@@ -157,15 +156,19 @@ void saveSettingsInEeprom()
 void ledGuard()
 {
   // светодиод mute мигает только если поднят флаг mute_flag
-  static bool flag = true;
+  static int8_t flag = 0;
   if (!mute_flag)
   {
     digitalWrite(MUTE_LED_PIN, LOW);
+    flag = 0;
   }
   else
   {
-    digitalWrite(MUTE_LED_PIN, flag);
-    flag = !flag;
+    digitalWrite(MUTE_LED_PIN, flag < 10);
+    if (++flag >= 20)
+    {
+      flag = 0;
+    }
   }
 
   // светодиод Bt-модуля горит только если выбран 4 вход, и питание на Bt-модуль подано
@@ -189,7 +192,7 @@ void setup()
 
   return_to_default_mode = tasks.addTask(TIMEOUT_OF_RETURN_TO_DEFMODE * 1000, returnToDefMode, false);
   save_settings_in_eeprom = tasks.addTask(TIMEOUT_OF_AUTOSAVE_DATA * 1000, saveSettingsInEeprom, false);
-  led_guard = tasks.addTask(500ul, ledGuard);
+  led_guard = tasks.addTask(50ul, ledGuard);
 
   // ---------------------------------------------------
 
