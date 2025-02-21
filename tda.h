@@ -8,6 +8,7 @@ void tda_init()
 {
   cur_mode = SET_VOLUME;
   tda.begin();
+  tda.mute();
 
   cur_volume = read_eeprom_8(EEPROM_INDEX_FOR_VOLUME);
   if (cur_volume > 48 || cur_volume == 0)
@@ -53,16 +54,16 @@ void setInputData(TDA7439_input _input)
 
 void setBalance(int8_t _balance)
 {
-  if (_balance > 21)
+  if (_balance > 7)
   {
-    _balance = 21;
+    _balance = 7;
   }
-  else if (_balance < -21)
+  else if (_balance < -7)
   {
-    _balance = -21;
+    _balance = -7;
   }
-  uint8_t right = (_balance < 0) ? 21 + _balance : 21;
-  uint8_t left = (_balance > 0) ? 21 - _balance : 21;
+  uint8_t right = (_balance < 0) ? -4 * _balance : 0;
+  uint8_t left = (_balance > 0) ? 4 * _balance : 0;
   tda.spkAtt(right, left);
 }
 
@@ -75,7 +76,7 @@ void switchingInput(TDA7439_input _input, bool _init)
     {
       saveSettingsInEeprom();
     }
-    
+
     // питание Bt-модуля включаем при первом переходе на четвертый вход; при
     // переходе на другой вход питание Bt-модуля не выключаем, чтобы иметь
     // возможность переключать входы TDA7439 без потери сигнала

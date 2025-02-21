@@ -208,11 +208,8 @@ void printProgressBar(int8_t _data)
   case SET_BASS:
   case SET_MIDDLE:
   case SET_TREBBLE:
-    x = _data + 7;
-    flat = false;
-    break;
   case SET_BALANCE:
-    x = _data / 3 + 7;
+    x = _data + 7;
     flat = false;
     break;
   default:

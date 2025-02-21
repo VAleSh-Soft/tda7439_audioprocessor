@@ -107,13 +107,13 @@ void changeCurData(bool _up)
     break;
   case SET_MIDDLE:
     _change_data(cur_data.middle, -7, 7, _up);
-    tda.setSnd(cur_data.bass, MIDDLE);
+    tda.setSnd(cur_data.middle, MIDDLE);
     printNumData(cur_data.middle);
     printProgressBar(cur_data.middle);
     break;
   case SET_TREBBLE:
     _change_data(cur_data.trebble, -7, 7, _up);
-    tda.setSnd(cur_data.bass, TREBBLE);
+    tda.setSnd(cur_data.trebble, TREBBLE);
     printNumData(cur_data.trebble);
     printProgressBar(cur_data.trebble);
     break;
@@ -126,7 +126,7 @@ void changeCurData(bool _up)
     printProgressBar(cur_data.input_gain);
     break;
   case SET_BALANCE:
-    _change_data(cur_data.balance, -21, 21, _up);
+    _change_data(cur_data.balance, -7, 7, _up);
     setBalance(cur_data.balance);
     printNumData(cur_data.balance);
     printProgressBar(cur_data.balance);
@@ -179,7 +179,7 @@ void ledGuard()
 
 void setup()
 {
-  // Serial.begin(115200);
+  Serial.begin(115200);
 
   // ---------------------------------------------------
 
