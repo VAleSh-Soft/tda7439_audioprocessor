@@ -127,6 +127,8 @@ void display_init()
   display.createChar(5, LR);
   display.createChar(6, MB);
   display.createChar(7, BM);
+
+  setBacklight(true);
 }
 
 static void _print_bc(uint8_t offset, uint8_t x)
