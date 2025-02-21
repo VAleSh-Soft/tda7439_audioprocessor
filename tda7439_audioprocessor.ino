@@ -46,22 +46,7 @@ void checkRotary()
     // переключение текущего входа, если нужно
     if (new_input)
     {
-      new_input = false;
-      if (next_input != cur_input)
-      {
-        // для четвертого канала включим питание Bt-модуля
-        uint8_t bt_pwr = cur_input == INPUT_4;
-        if (!BT_CONTROL_LEVEL)
-        {
-          bt_pwr = !bt_pwr;
-        }
-        digitalWrite(BT_POWER_PIN, bt_pwr);
-
-        saveSettingsInEeprom();
-      }
-      setInputData(next_input);
-      cur_mode = SET_VOLUME;
-      printCurScreen();
+      switchingInput(next_input);
     }
     no_mute = false;
     break;
@@ -171,23 +156,20 @@ void saveSettingsInEeprom()
 
 void ledGuard()
 {
-  static bool flag;
+  // светодиод mute мигает только если поднят флаг mute_flag
+  static bool flag = true;
   if (!mute_flag)
   {
     digitalWrite(MUTE_LED_PIN, LOW);
-    tasks.stopTask(led_guard);
   }
   else
   {
-    if (!tasks.getTaskState(led_guard))
-    {
-      tasks.startTask(led_guard);
-      flag = true;
-    }
-
     digitalWrite(MUTE_LED_PIN, flag);
     flag = !flag;
   }
+
+  // светодиод Bt-модуля горит только если выбран 4 вход, и питание на Bt-модуль подано
+  digitalWrite(BT_LED_PIN, (cur_input == INPUT_4 && digitalRead(BT_POWER_PIN) == BT_CONTROL_LEVEL));
 }
 
 // ===================================================
@@ -201,12 +183,13 @@ void setup()
   digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
   pinMode(BT_POWER_PIN, OUTPUT);
   pinMode(MUTE_LED_PIN, OUTPUT);
+  pinMode(BT_LED_PIN, OUTPUT);
 
   // ---------------------------------------------------
 
   return_to_default_mode = tasks.addTask(TIMEOUT_OF_RETURN_TO_DEFMODE * 1000, returnToDefMode, false);
   save_settings_in_eeprom = tasks.addTask(TIMEOUT_OF_AUTOSAVE_DATA * 1000, saveSettingsInEeprom, false);
-  led_guard = tasks.addTask(500ul, ledGuard, false);
+  led_guard = tasks.addTask(500ul, ledGuard);
 
   // ---------------------------------------------------
 

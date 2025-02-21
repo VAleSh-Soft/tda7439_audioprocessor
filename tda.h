@@ -15,12 +15,10 @@ void tda_init()
     cur_volume = 20;
   }
 
-  readCurInput();
-  setInputData(cur_input);
-  printCurScreen();
+  switchingInput(readCurInput(), true);
 }
 
-void readCurInput()
+TDA7439_input readCurInput()
 {
   uint8_t inp = read_eeprom_8(EEPROM_INDEX_FOR_INPUT);
   if (inp > 3)
@@ -28,7 +26,7 @@ void readCurInput()
     inp = 1;
   }
 
-  cur_input = (TDA7439_input)inp;
+  return (TDA7439_input)inp;
 }
 
 void setInputData(TDA7439_input _input)
@@ -66,6 +64,29 @@ void setBalance(int8_t _balance)
   uint8_t right = (_balance < 0) ? 21 + _balance : 21;
   uint8_t left = (_balance > 0) ? 21 - _balance : 21;
   tda.spkAtt(right, left);
+}
+
+void switchingInput(TDA7439_input _input, bool _init)
+{
+  new_input = false;
+  if (_input != cur_input || _init)
+  {
+    if (!_init)
+    {
+      saveSettingsInEeprom();
+    }
+    
+    // питание Bt-модуля включаем при первом переходе на четвертый вход; при
+    // переходе на другой вход питание Bt-модуля не выключаем, чтобы иметь
+    // возможность переключать входы TDA7439 без потери сигнала
+    if (_input == INPUT_4)
+    {
+      digitalWrite(BT_POWER_PIN, BT_CONTROL_LEVEL);
+    }
+    setInputData(_input);
+    cur_mode = SET_VOLUME;
+  }
+  printCurScreen();
 }
 
 #endif // TDA_H
