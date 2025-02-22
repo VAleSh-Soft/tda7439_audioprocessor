@@ -171,8 +171,10 @@ void ledGuard()
     }
   }
 
+#if USE_BT_MODULE_AT_4TH_INPUT
   // светодиод Bt-модуля горит только если выбран 4 вход, и питание на Bt-модуль подано
   digitalWrite(BT_LED_PIN, (cur_input == INPUT_4 && digitalRead(BT_POWER_PIN) == BT_CONTROL_LEVEL));
+#endif
 }
 
 // ===================================================
@@ -183,10 +185,12 @@ void setup()
 
   // ---------------------------------------------------
 
+#if USE_BT_MODULE_AT_4TH_INPUT
   digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
   pinMode(BT_POWER_PIN, OUTPUT);
-  pinMode(MUTE_LED_PIN, OUTPUT);
   pinMode(BT_LED_PIN, OUTPUT);
+#endif
+  pinMode(MUTE_LED_PIN, OUTPUT);
 
   // ---------------------------------------------------
 

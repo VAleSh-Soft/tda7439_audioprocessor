@@ -50,6 +50,7 @@ static uint8_t const RT[8] PROGMEM =
         0b11111};
 
 static uint8_t const LL[8] PROGMEM =
+#if USE_BT_MODULE_AT_4TH_INPUT
     {
         0b00000,
         0b00000,
@@ -59,6 +60,17 @@ static uint8_t const LL[8] PROGMEM =
         0b11000,
         0b11100,
         0b11110};
+#else
+    {
+        B11111,
+        B11111,
+        B11111,
+        B11111,
+        B11111,
+        B11111,
+        B01111,
+        B00111};
+#endif
 
 static uint8_t const LB[8] PROGMEM =
     {
@@ -110,8 +122,12 @@ uint8_t const PROGMEM nums[]{
     0x01, 0x02, 0x20, 0x04, 0xFF, 0x04, // 1
     0x01, 0x01, 0x02, 0x00, 0x07, 0x07, // 2
     0x01, 0x06, 0x02, 0x04, 0x04, 0x05, // 3
+    0x03, 0x04, 0xFF, 0x20, 0x20, 0xFF  // 4
+#if USE_BT_MODULE_AT_4TH_INPUT
+    ,
     0xFF, 0x04, 0x03, 0xFF, 0x04, 0x05, // b
     0x01, 0xFF, 0x01, 0x20, 0xFF, 0x20  // T
+#endif
 };
 
 // ===================================================
@@ -150,15 +166,23 @@ void printBigChar(uint8_t x)
   const uint8_t offset = 10;
   if (x > 0 && x <= 4)
   {
-    _print_bc(offset, x);
+#if USE_BT_MODULE_AT_4TH_INPUT
     if (x == 4)
     {
-      _print_bc(offset + 3, 5);
+      x = 5;
+    }
+#endif
+    _print_bc(offset, x);
+#if USE_BT_MODULE_AT_4TH_INPUT
+    if (x == 4)
+    {
+      _print_bc(offset + 3, 6);
     }
     else
     {
       _print_bc(offset + 3, 0);
     }
+#endif
   }
 }
 
@@ -177,14 +201,16 @@ void printNumData(int8_t number)
   display.print(number);
 }
 
-void printInData(bool bt)
+void printInData()
 {
   display.setCursor(0, 0);
-  if (bt && cur_input == INPUT_4)
+#if USE_BT_MODULE_AT_4TH_INPUT
+  if (cur_input == INPUT_4)
   {
     display.print("Bt");
   }
   else
+#endif
   {
     display.print(4 - (uint8_t)cur_input);
     display.print(" ");
