@@ -8,19 +8,19 @@
 
 // ===================================================
 
-#define USE_BT_MODULE_AT_4TH_INPUT 1 // использовать Bluetooth трансмиттер на входе №4; 1 - использовать, 0 - не использовать
+#define USE_BT_MODULE  4 // использовать Bluetooth трансмиттер на указанном входе; 0 - не использовать
 
 constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 10; // таймаут автовозврата в режим по умолчанию, секунд
 constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут задержки автосохранения настроек, секунд
 
-#if USE_BT_MODULE_AT_4TH_INPUT
+#if USE_BT_MODULE > 0
 constexpr uint8_t BT_CONTROL_LEVEL = HIGH; // управляющий уровень для включения модуля Bt
 #endif
 
 constexpr uint8_t ENC_A_PIN = 3;    // пин A энкодера (DT)
 constexpr uint8_t ENC_B_PIN = 2;    // пин B энкодера (CLK)
 constexpr uint8_t BUTTON_PIN = 4;   // пин кнопки энкодера (SW)
-#if USE_BT_MODULE_AT_4TH_INPUT
+#if USE_BT_MODULE > 0
 constexpr uint8_t BT_POWER_PIN = 5; // пин для управления питанием Bt-модуля
 constexpr uint8_t BT_LED_PIN = 9;   // пин светодиода - индикатора включения Bt-модуля
 #endif

@@ -77,11 +77,11 @@ void switchingInput(TDA7439_input _input, bool _init)
       saveSettingsInEeprom();
     }
 
-#if USE_BT_MODULE_AT_4TH_INPUT
+#if USE_BT_MODULE > 0
     // питание Bt-модуля включаем при первом переходе на четвертый вход; при
     // переходе на другой вход питание Bt-модуля не выключаем, чтобы иметь
     // возможность переключать входы TDA7439 без потери сигнала
-    if (_input == INPUT_4)
+    if (_input == (TDA7439_input)(4 - USE_BT_MODULE))
     {
       digitalWrite(BT_POWER_PIN, BT_CONTROL_LEVEL);
     }

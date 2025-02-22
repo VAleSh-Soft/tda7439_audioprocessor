@@ -50,7 +50,7 @@ static uint8_t const RT[8] PROGMEM =
         0b11111};
 
 static uint8_t const LL[8] PROGMEM =
-#if USE_BT_MODULE_AT_4TH_INPUT
+#if USE_BT_MODULE == 4
     {
         0b00000,
         0b00000,
@@ -95,6 +95,7 @@ static uint8_t const LR[8] PROGMEM =
         0b11100};
 
 static uint8_t const MB[8] PROGMEM =
+#if USE_BT_MODULE == 3
     {
         0b11111,
         0b11111,
@@ -104,8 +105,20 @@ static uint8_t const MB[8] PROGMEM =
         0b00000,
         0b11111,
         0b11111};
+#else
+    {
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b11000,
+        0b11100,
+        0b11110};
+#endif
 
 static uint8_t const BM[8] PROGMEM =
+#if USE_BT_MODULE == 2
     {
         0b11111,
         0b11111,
@@ -115,6 +128,17 @@ static uint8_t const BM[8] PROGMEM =
         0b11111,
         0b11111,
         0b11111};
+#else
+    {
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b11000,
+        0b11100,
+        0b11110};
+#endif
 
 // массивы сегментов для отрисовки цифр
 uint8_t const PROGMEM nums[]{
@@ -123,10 +147,22 @@ uint8_t const PROGMEM nums[]{
     0x01, 0x01, 0x02, 0x00, 0x07, 0x07, // 2
     0x01, 0x06, 0x02, 0x04, 0x04, 0x05, // 3
     0x03, 0x04, 0xFF, 0x20, 0x20, 0xFF  // 4
-#if USE_BT_MODULE_AT_4TH_INPUT
+#if USE_BT_MODULE > 0
+#if USE_BT_MODULE == 4
     ,
-    0xFF, 0x04, 0x03, 0xFF, 0x04, 0x05, // b
-    0x01, 0xFF, 0x01, 0x20, 0xFF, 0x20  // T
+    0xFF, 0x04, 0x03, 0xFF, 0x04, 0x05 // b
+#elif USE_BT_MODULE == 3
+    ,
+    0xFF, 0x04, 0x06, 0xFF, 0x04, 0x05 // b
+#elif USE_BT_MODULE == 2
+    ,
+    0xFF, 0x04, 0x07, 0xFF, 0x04, 0x05 // b
+#else
+    ,
+    0xFF, 0x04, 0x04, 0xFF, 0x04, 0x05 // b
+#endif
+    ,
+    0x01, 0xFF, 0x01, 0x20, 0xFF, 0x20 // T
 #endif
 };
 
@@ -166,15 +202,15 @@ void printBigChar(uint8_t x)
   const uint8_t offset = 10;
   if (x > 0 && x <= 4)
   {
-#if USE_BT_MODULE_AT_4TH_INPUT
-    if (x == 4)
+#if USE_BT_MODULE > 0
+    if (x == USE_BT_MODULE)
     {
       x = 5;
     }
 #endif
     _print_bc(offset, x);
-#if USE_BT_MODULE_AT_4TH_INPUT
-    if (x == 4)
+#if USE_BT_MODULE > 0
+    if (x == USE_BT_MODULE)
     {
       _print_bc(offset + 3, 6);
     }
@@ -204,8 +240,8 @@ void printNumData(int8_t number)
 void printInData()
 {
   display.setCursor(0, 0);
-#if USE_BT_MODULE_AT_4TH_INPUT
-  if (cur_input == INPUT_4)
+#if USE_BT_MODULE > 0
+  if (cur_input == (TDA7439_input)(4 - USE_BT_MODULE))
   {
     display.print("Bt");
   }
