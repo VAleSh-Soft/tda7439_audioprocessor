@@ -172,7 +172,7 @@ void ledGuard()
   }
 
 #if USE_BT_MODULE > 0
-  // светодиод Bt-модуля горит только если выбран 4 вход, и питание на Bt-модуль подано
+  // светодиод Bt-модуля горит только если выбран его вход, и питание на Bt-модуль подано
   digitalWrite(BT_LED_PIN, (cur_input == (TDA7439_input)(4 - USE_BT_MODULE) &&
                             digitalRead(BT_POWER_PIN) == BT_CONTROL_LEVEL));
 #endif
@@ -206,7 +206,7 @@ void setup()
   eeprom_init(EEPROM_SIZE);
 #endif
   display_init();
-  enc.begin(true);
+  enc.begin(INT_PULLUP_OF_ROTARY_PINS);
   tda_init();
 }
 

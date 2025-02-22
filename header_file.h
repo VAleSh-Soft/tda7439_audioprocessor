@@ -13,6 +13,8 @@
 constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 10; // таймаут автовозврата в режим по умолчанию, секунд
 constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут задержки автосохранения настроек, секунд
 
+constexpr bool INT_PULLUP_OF_ROTARY_PINS = true; // используется внутренняя подтяжка пинов к VCC, установите false, если ваш модуль энкодера использует внешнюю подтяжку
+
 #if USE_BT_MODULE > 0
 constexpr uint8_t BT_CONTROL_LEVEL = HIGH; // управляющий уровень для включения модуля Bt
 #endif
