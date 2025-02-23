@@ -10,6 +10,7 @@ void checkRotary()
   unsigned char enc_res = enc.process();
   if (enc_res)
   {
+  #if NUMBER_OF_INPUT_IS_USED > 1
     if (btn.isButtonClosed())
     {
       new_input = true;
@@ -30,6 +31,7 @@ void checkRotary()
       printBigChar(4 - (uint8_t)next_input);
     }
     else
+#endif
     {
       changeCurData(enc_res == DIR_CW);
     }
@@ -171,7 +173,7 @@ void ledGuard()
     }
   }
 
-#if USE_BT_MODULE > 0
+#if USE_BT_MODULE > 0 && USE_BT_MODULE <= NUMBER_OF_INPUT_IS_USED
   // светодиод Bt-модуля горит только если выбран его вход, и питание на Bt-модуль подано
   digitalWrite(BT_LED_PIN, (cur_input == (TDA7439_input)(4 - USE_BT_MODULE) &&
                             digitalRead(BT_POWER_PIN) == BT_CONTROL_LEVEL));
@@ -186,7 +188,7 @@ void setup()
 
   // ---------------------------------------------------
 
-#if USE_BT_MODULE > 0
+#if USE_BT_MODULE > 0 && USE_BT_MODULE <= NUMBER_OF_INPUT_IS_USED
   digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
   pinMode(BT_POWER_PIN, OUTPUT);
   pinMode(BT_LED_PIN, OUTPUT);

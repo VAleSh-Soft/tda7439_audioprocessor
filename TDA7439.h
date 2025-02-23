@@ -29,62 +29,6 @@ enum TDA7439_input : uint8_t
 	INPUT_1	 // вход 1
 };
 
-static TDA7439_input getNextInput(const TDA7439_input obj)
-{
-	switch (obj)
-	{
-	case INPUT_1:
-		return (INPUT_2);
-	case INPUT_2:
-		return (INPUT_3);
-	case INPUT_3:
-		return (INPUT_4);
-	case INPUT_4:
-		return (INPUT_1);
-	}
-}
-
-static TDA7439_input getPrevInput(const TDA7439_input obj)
-{
-	switch (obj)
-	{
-	case INPUT_4:
-		return (INPUT_3);
-	case INPUT_3:
-		return (INPUT_2);
-	case INPUT_2:
-		return (INPUT_1);
-	case INPUT_1:
-		return (INPUT_4);
-	}
-}
-
-TDA7439_input &operator++(TDA7439_input &obj)
-{
-  obj = getNextInput(obj);
-  return (obj);
-}
-
-TDA7439_input operator++(TDA7439_input &obj, const int)
-{
-  const TDA7439_input copy = obj;
-  obj = getNextInput(obj);
-  return (copy);
-}
-
-TDA7439_input &operator--(TDA7439_input &obj)
-{
-  obj = getPrevInput(obj);
-  return (obj);
-}
-
-TDA7439_input operator--(TDA7439_input &obj, const int)
-{
-  const TDA7439_input copy = obj;
-  obj = getPrevInput(obj);
-  return (copy);
-}
-
 // диапазон регулировки тембра
 enum TDA7439_bands : uint8_t
 {

@@ -8,25 +8,27 @@
 
 // ===================================================
 
-#define USE_BT_MODULE  4 // использовать Bluetooth трансмиттер на указанном входе; 0 - не использовать
+#define NUMBER_OF_INPUT_IS_USED 4 // количество используемых входов TDA7439; 1..4
+#define USE_BT_MODULE 4           // использовать Bluetooth трансмиттер на указанном входе; 0 - не использовать
 
 constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 10; // таймаут автовозврата в режим по умолчанию, секунд
 constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут задержки автосохранения настроек, секунд
 
 constexpr bool INT_PULLUP_OF_ROTARY_PINS = true; // используется внутренняя подтяжка пинов к VCC, установите false, если ваш модуль энкодера использует внешнюю подтяжку
 
-#if USE_BT_MODULE > 0
+#if USE_BT_MODULE > 0 && USE_BT_MODULE <= NUMBER_OF_INPUT_IS_USED
 constexpr uint8_t BT_CONTROL_LEVEL = HIGH; // управляющий уровень для включения модуля Bt
 #endif
 
-constexpr uint8_t ENC_A_PIN = 3;    // пин A энкодера (DT)
-constexpr uint8_t ENC_B_PIN = 2;    // пин B энкодера (CLK)
-constexpr uint8_t BUTTON_PIN = 4;   // пин кнопки энкодера (SW)
-#if USE_BT_MODULE > 0
+constexpr uint8_t ENC_A_PIN = 3;  // пин A энкодера (DT)
+constexpr uint8_t ENC_B_PIN = 4;  // пин B энкодера (CLK)
+constexpr uint8_t BUTTON_PIN = 2; // пин кнопки энкодера (SW)
+#if USE_BT_MODULE > 0 && USE_BT_MODULE <= NUMBER_OF_INPUT_IS_USED
 constexpr uint8_t BT_POWER_PIN = 5; // пин для управления питанием Bt-модуля
-constexpr uint8_t BT_LED_PIN = 9;   // пин светодиода - индикатора включения Bt-модуля
+constexpr uint8_t BT_LED_PIN = 8;   // пин светодиода - индикатора включения Bt-модуля
 #endif
-constexpr uint8_t MUTE_LED_PIN = 8; // пин светодиода mute
+constexpr uint8_t MUTE_LED_PIN = 9;    // пин светодиода mute
+constexpr uint8_t VOLTAGE_CONTROL = 6; // пин контроля пропадания напряжения
 
 constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10; // индекс в EEPROM для сохранения текущей громкости (1 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_INPUT = 11;  // индекс в EEPROM для сохранения текущего входа (1 байт)
@@ -34,6 +36,12 @@ constexpr uint16_t EEPROM_INDEX_FOR_DATA_1 = 12; // индекс в EEPROM дл�
 constexpr uint16_t EEPROM_INDEX_FOR_DATA_2 = 17; // индекс в EEPROM для сохранения данных второго канала (5 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_DATA_3 = 22; // индекс в EEPROM для сохранения данных третьего канала (5 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_DATA_4 = 27; // индекс в EEPROM для сохранения данных четвертого канала (5 байт)
+
+// ===================================================
+
+#if NUMBER_OF_INPUT_IS_USED == 0
+#error "Ask the correct value of NUMBER_OF_INPUT_IS_USED - 1..4"
+#endif
 
 // ===================================================
 
@@ -111,7 +119,7 @@ void writeInputData(TDA_DATA &_data, TDA7439_input _input); // запись да
 void display_init();
 void printBigChar(uint8_t x);        // вывод больших символов
 void printNumData(int8_t number);    // вывод цифрового значения текущего параметра в правом верхнем углу экрана
-void printInData();    // вывод номера текущего входа в левом верхнем углу экрана
+void printInData();                  // вывод номера текущего входа в левом верхнем углу экрана
 void printProgressBar(int8_t _data); //  вывод прогресс-бара
 void printCurScreen();               // отрисовка текущего экрана
 void setBacklight(bool flag);        // управление подсветкой экрана
@@ -199,6 +207,74 @@ bool no_mute = false;    // флаг запрета отключения зву�
 TDA_DATA cur_data;       // данные для настройки текущего канала
 
 int8_t dir = 0;
+
+// ===================================================
+
+#if NUMBER_OF_INPUT_IS_USED > 1
+static TDA7439_input getNextInput(const TDA7439_input obj)
+{
+  switch (obj)
+  {
+  case INPUT_1:
+    return (INPUT_2);
+#if NUMBER_OF_INPUT_IS_USED > 2
+  case INPUT_2:
+    return (INPUT_3);
+#endif
+#if NUMBER_OF_INPUT_IS_USED > 3
+  case INPUT_3:
+    return (INPUT_4);
+#endif
+  default:
+    return (INPUT_1);
+  }
+}
+
+static TDA7439_input getPrevInput(const TDA7439_input obj)
+{
+  switch (obj)
+  {
+  case INPUT_2:
+    return (INPUT_1);
+#if NUMBER_OF_INPUT_IS_USED > 2
+  case INPUT_3:
+    return (INPUT_2);
+#endif
+#if NUMBER_OF_INPUT_IS_USED > 3
+  case INPUT_4:
+    return (INPUT_3);
+#endif
+  default:
+    return (INPUT_4);
+  }
+}
+
+TDA7439_input &operator++(TDA7439_input &obj)
+{
+  obj = getNextInput(obj);
+  return (obj);
+}
+
+TDA7439_input operator++(TDA7439_input &obj, const int)
+{
+  const TDA7439_input copy = obj;
+  obj = getNextInput(obj);
+  return (copy);
+}
+
+TDA7439_input &operator--(TDA7439_input &obj)
+{
+  obj = getPrevInput(obj);
+  return (obj);
+}
+
+TDA7439_input operator--(TDA7439_input &obj, const int)
+{
+  const TDA7439_input copy = obj;
+  obj = getPrevInput(obj);
+  return (copy);
+}
+#endif
 
 // ===================================================
 
