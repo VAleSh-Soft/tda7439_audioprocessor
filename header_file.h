@@ -27,8 +27,8 @@ constexpr uint8_t BUTTON_PIN = 2; // пин кнопки энкодера (SW)
 constexpr uint8_t BT_POWER_PIN = 5; // пин для управления питанием Bt-модуля
 constexpr uint8_t BT_LED_PIN = 8;   // пин светодиода - индикатора включения Bt-модуля
 #endif
-constexpr uint8_t MUTE_LED_PIN = 9;    // пин светодиода mute
-constexpr uint8_t VOLTAGE_CONTROL = 6; // пин контроля пропадания напряжения
+constexpr uint8_t MUTE_LED_PIN = 9;        // пин светодиода mute
+constexpr uint8_t VOLTAGE_CONTROL_PIN = 6; // пин контроля пропадания напряжения
 
 constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10; // индекс в EEPROM для сохранения текущей громкости (1 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_INPUT = 11;  // индекс в EEPROM для сохранения текущего входа (1 байт)
@@ -106,6 +106,7 @@ void changeCurData(bool _up); // изменение текущего парам�
 void returnToDefMode();       // возврат в режим по умолчанию
 void saveSettingsInEeprom();  // сохранение настроек в EEPROM
 void ledGuard();              // управление светодиодом
+void powerShutdownGuard();    // контроль за пропаданием напряжения питания
 
 // ==== _eeprom.h ====================================
 
@@ -138,9 +139,9 @@ void switchingInput(TDA7439_input _input,
 shHandle return_to_default_mode;
 shHandle save_settings_in_eeprom;
 shHandle led_guard;
-// shHandle power_shutdown_monitor;
+shHandle power_shutdown_monitor;
 
-shTaskManager tasks(3);
+shTaskManager tasks(4);
 
 // ===================================================
 

@@ -10,7 +10,7 @@ void checkRotary()
   unsigned char enc_res = enc.process();
   if (enc_res)
   {
-  #if NUMBER_OF_INPUT_IS_USED > 1
+#if NUMBER_OF_INPUT_IS_USED > 1
     if (btn.isButtonClosed())
     {
       new_input = true;
@@ -180,6 +180,14 @@ void ledGuard()
 #endif
 }
 
+void powerShutdownGuard()
+{
+  if (!digitalRead(VOLTAGE_CONTROL_PIN))
+  {
+    tda.mute(); // единственное, что делает монитор напряжения питания - отключает звук при его пропадании, чтобы избежать щелчка в колонках
+  }
+}
+
 // ===================================================
 
 void setup()
@@ -200,6 +208,7 @@ void setup()
   return_to_default_mode = tasks.addTask(TIMEOUT_OF_RETURN_TO_DEFMODE * 1000, returnToDefMode);
   save_settings_in_eeprom = tasks.addTask(TIMEOUT_OF_AUTOSAVE_DATA * 1000, saveSettingsInEeprom, false);
   led_guard = tasks.addTask(50ul, ledGuard);
+  power_shutdown_monitor = tasks.addTask(10ul, powerShutdownGuard);
 
   // ---------------------------------------------------
 
