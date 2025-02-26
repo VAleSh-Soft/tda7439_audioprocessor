@@ -20,15 +20,15 @@ constexpr bool INT_PULLUP_OF_ROTARY_PINS = true; // используется в�
 constexpr uint8_t BT_CONTROL_LEVEL = HIGH; // управляющий уровень для включения модуля Bt
 #endif
 
-constexpr uint8_t ENC_A_PIN = 3;  // пин A энкодера (DT)
-constexpr uint8_t ENC_B_PIN = 4;  // пин B энкодера (CLK)
-constexpr uint8_t BUTTON_PIN = 2; // пин кнопки энкодера (SW)
+constexpr uint8_t ENC_A_PIN = 4;  // пин A энкодера (DT)
+constexpr uint8_t ENC_B_PIN = 5;  // пин B энкодера (CLK)
+constexpr uint8_t BUTTON_PIN = 3; // пин кнопки энкодера (SW)
 #if USE_BT_MODULE > 0 && USE_BT_MODULE <= NUMBER_OF_INPUT_IS_USED
-constexpr uint8_t BT_POWER_PIN = 5; // пин для управления питанием Bt-модуля
+constexpr uint8_t BT_POWER_PIN = 6; // пин для управления питанием Bt-модуля
 constexpr uint8_t BT_LED_PIN = 8;   // пин светодиода - индикатора включения Bt-модуля
 #endif
 constexpr uint8_t MUTE_LED_PIN = 9;        // пин светодиода mute
-constexpr uint8_t VOLTAGE_CONTROL_PIN = 6; // пин контроля пропадания напряжения
+constexpr uint8_t VOLTAGE_CONTROL_PIN = 2; // пин контроля пропадания напряжения
 
 constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10; // индекс в EEPROM для сохранения текущей громкости (1 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_INPUT = 11;  // индекс в EEPROM для сохранения текущего входа (1 байт)
@@ -139,9 +139,8 @@ void switchingInput(TDA7439_input _input,
 shHandle return_to_default_mode;
 shHandle save_settings_in_eeprom;
 shHandle led_guard;
-shHandle power_shutdown_monitor;
 
-shTaskManager tasks(4);
+shTaskManager tasks(3);
 
 // ===================================================
 
@@ -202,10 +201,11 @@ TDA7439_input cur_input = INPUT_1;  // текущий вход
 TDA7439_input next_input = INPUT_1; // вход для переключения
 bool new_input = false;             // флаг необходимости переключения входа
 
-uint8_t cur_volume = 20; // текущая громкость
-bool mute_flag = false;  // флаг отключения звука
-bool no_mute = false;    // флаг запрета отключения звука
-TDA_DATA cur_data;       // данные для настройки текущего канала
+uint8_t cur_volume = 20;            // текущая громкость
+bool mute_flag = false;             // флаг отключения звука
+bool no_mute = false;               // флаг запрета отключения звука
+volatile bool no_save_flag = false; // флаг запрета сохранения настроек; если поднят, значит сработал монитор пропадания напряжения питания
+TDA_DATA cur_data;                  // данные для настройки текущего канала
 
 int8_t dir = 0;
 

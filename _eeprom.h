@@ -35,7 +35,7 @@ void eeprom_init(uint16_t _eeprom_size)
   {
     _eeprom_size = 4096;
   }
-  EEPROM.begin(_eeprom_size);  
+  EEPROM.begin(_eeprom_size);
 }
 #endif
 
@@ -47,11 +47,14 @@ uint8_t read_eeprom_8(uint16_t _index)
 
 void write_eeprom_8(uint16_t _index, uint8_t _data)
 {
+  if (!no_save_flag)
+  {
 #if __USE_EEPROM_IN_FLASH__
-  eeprom_update(_index, _data);
+    eeprom_update(_index, _data);
 #else
-  EEPROM.update(_index, _data);
+    EEPROM.update(_index, _data);
 #endif
+  }
 }
 
 static uint16_t _get_index(TDA7439_input _input)

@@ -150,6 +150,11 @@ void returnToDefMode()
 
 void saveSettingsInEeprom()
 {
+  if (no_save_flag)
+  {
+    return;
+  }
+
   write_eeprom_8(EEPROM_INDEX_FOR_VOLUME, cur_volume);
   writeInputData(cur_data, cur_input);
   tasks.stopTask(save_settings_in_eeprom);
@@ -182,10 +187,10 @@ void ledGuard()
 
 void powerShutdownGuard()
 {
-  if (!digitalRead(VOLTAGE_CONTROL_PIN))
-  {
-    tda.mute(); // единственное, что делает монитор напряжения питания - отключает звук при его пропадании, чтобы избежать щелчка в колонках
-  }
+  tda.mute(); // главное, что делает монитор напряжения питания - отключает звук при его пропадании, чтобы избежать щелчка в колонках
+  digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
+  // если питание отключено, то запрещаем сохранение данных, т.к. есть риск, что питание пропадет в момент записи в EEPROM, и данные будут потеряны
+  no_save_flag = true;
 }
 
 // ===================================================
@@ -208,8 +213,12 @@ void setup()
   return_to_default_mode = tasks.addTask(TIMEOUT_OF_RETURN_TO_DEFMODE * 1000, returnToDefMode);
   save_settings_in_eeprom = tasks.addTask(TIMEOUT_OF_AUTOSAVE_DATA * 1000, saveSettingsInEeprom, false);
   led_guard = tasks.addTask(50ul, ledGuard);
-  power_shutdown_monitor = tasks.addTask(10ul, powerShutdownGuard);
 
+  // ---------------------------------------------------
+
+  attachInterrupt(0, powerShutdownGuard, FALLING);
+  no_save_flag = false;
+  
   // ---------------------------------------------------
 
 #if __USE_EEPROM_IN_FLASH__
