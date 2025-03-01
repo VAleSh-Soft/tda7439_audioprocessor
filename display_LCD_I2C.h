@@ -97,16 +97,6 @@ static uint8_t const LR[8] PROGMEM =
 static uint8_t const MB[8] PROGMEM =
 #if USE_BT_MODULE_ON_INPUT == 3 && NUMBER_OF_INPUT_IS_USED >= 3
     {
-        0b11111,
-        0b11111,
-        0b11111,
-        0b00000,
-        0b00000,
-        0b00000,
-        0b11111,
-        0b11111};
-#else
-    {
         0b00000,
         0b00000,
         0b00000,
@@ -115,21 +105,21 @@ static uint8_t const MB[8] PROGMEM =
         0b11000,
         0b11100,
         0b11110};
+#else
+    {
+      0b11111,
+      0b11111,
+      0b11111,
+      0b00000,
+      0b00000,
+      0b00000,
+      0b11111,
+      0b11111};
 #endif
 
 static uint8_t const BM[8] PROGMEM =
 #if USE_BT_MODULE_ON_INPUT == 2 && NUMBER_OF_INPUT_IS_USED >= 2
     {
-        0b11111,
-        0b11111,
-        0b00000,
-        0b00000,
-        0b00000,
-        0b11111,
-        0b11111,
-        0b11111};
-#else
-    {
         0b00000,
         0b00000,
         0b00000,
@@ -138,6 +128,16 @@ static uint8_t const BM[8] PROGMEM =
         0b11000,
         0b11100,
         0b11110};
+#else
+    {
+      0b11111,
+      0b11111,
+      0b00000,
+      0b00000,
+      0b00000,
+      0b11111,
+      0b11111,
+      0b11111};
 #endif
 
 // массивы сегментов для отрисовки цифр
@@ -210,7 +210,7 @@ void printBigChar(uint8_t x)
 #endif
     _print_bc(offset, x);
 #if BT_MODULE_IS_USED
-    if (x == USE_BT_MODULE_ON_INPUT)
+    if (x == 5)
     {
       _print_bc(offset + 3, 6);
     }

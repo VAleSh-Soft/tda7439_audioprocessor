@@ -188,7 +188,9 @@ void ledGuard()
 void powerShutdownGuard()
 {
   tda.mute(); // главное, что делает монитор напряжения питания - отключает звук при выключении, чтобы избежать щелчка в колонках
+#if BT_MODULE_IS_USED
   digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
+#endif
   // если питание отключено, то запрещаем сохранение данных, т.к. есть риск, что питание пропадет в момент записи в EEPROM, и данные будут потеряны
   no_save_flag = true;
 }

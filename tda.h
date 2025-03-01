@@ -22,9 +22,9 @@ void tda_init()
 TDA7439_input readCurInput()
 {
   uint8_t inp = read_eeprom_8(EEPROM_INDEX_FOR_INPUT);
-  if (inp > 3)
+  if (inp > 3 || inp < (4 - NUMBER_OF_INPUT_IS_USED))
   {
-    inp = 1;
+    inp = 3;
   }
 
   return (TDA7439_input)inp;
@@ -79,8 +79,8 @@ void switchingInput(TDA7439_input _input, bool _init)
 
 #if BT_MODULE_IS_USED
     // питание Bt-модуля включаем при первом переходе на вход, к
-    // которому он подключен; при переходе на другой вход питание 
-    // Bt-модуля не выключаем, чтобы иметь возможность переключать 
+    // которому он подключен; при переходе на другой вход питание
+    // Bt-модуля не выключаем, чтобы иметь возможность переключать
     // входы TDA7439 без потери сигнала
     if (_input == (TDA7439_input)(4 - USE_BT_MODULE_ON_INPUT))
     {
@@ -88,8 +88,8 @@ void switchingInput(TDA7439_input _input, bool _init)
     }
 #endif
     setInputData(_input);
-    cur_mode = SET_VOLUME;
   }
+  cur_mode = SET_VOLUME;
   printCurScreen();
 }
 

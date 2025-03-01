@@ -49,7 +49,6 @@ constexpr uint16_t EEPROM_INDEX_FOR_DATA_4 = 27; // индекс в EEPROM дл�
 #define BT_MODULE_IS_USED 0
 #endif
 
-
 // ===================================================
 
 struct TDA_DATA // структура с данными настройки для каждого входа
@@ -234,7 +233,7 @@ static TDA7439_input getNextInput(const TDA7439_input obj)
     return (INPUT_4);
 #endif
   default:
-    return (INPUT_1);
+    return ((TDA7439_input)(4 - NUMBER_OF_INPUT_IS_USED));
   }
 }
 
@@ -253,7 +252,7 @@ static TDA7439_input getPrevInput(const TDA7439_input obj)
     return (INPUT_3);
 #endif
   default:
-    return (INPUT_4);
+    return (INPUT_1);
   }
 }
 
