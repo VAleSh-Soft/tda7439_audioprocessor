@@ -54,16 +54,16 @@ void setInputData(TDA7439_input _input)
 
 void setBalance(int8_t _balance)
 {
-  if (_balance > 7)
+  if (_balance > 14)
   {
-    _balance = 7;
+    _balance = 14;
   }
-  else if (_balance < -7)
+  else if (_balance < -14)
   {
-    _balance = -7;
+    _balance = -14;
   }
-  uint8_t right = (_balance < 0) ? -4 * _balance : 0;
-  uint8_t left = (_balance > 0) ? 4 * _balance : 0;
+  uint8_t right = (_balance < 0) ? -2 * _balance : 0;
+  uint8_t left = (_balance > 0) ? 2 * _balance : 0;
   tda.spkAtt(right, left);
 }
 

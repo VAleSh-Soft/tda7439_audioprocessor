@@ -128,7 +128,7 @@ void changeCurData(bool _up)
     printProgressBar(cur_data.input_gain);
     break;
   case SET_BALANCE:
-    _change_data(cur_data.balance, -7, 7, _up);
+    _change_data(cur_data.balance, -14, 14, _up);
     setBalance(cur_data.balance);
     printNumData(cur_data.balance);
     printProgressBar(cur_data.balance);

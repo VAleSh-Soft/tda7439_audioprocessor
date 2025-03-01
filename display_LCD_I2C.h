@@ -107,14 +107,14 @@ static uint8_t const MB[8] PROGMEM =
         0b11110};
 #else
     {
-      0b11111,
-      0b11111,
-      0b11111,
-      0b00000,
-      0b00000,
-      0b00000,
-      0b11111,
-      0b11111};
+        0b11111,
+        0b11111,
+        0b11111,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b11111,
+        0b11111};
 #endif
 
 static uint8_t const BM[8] PROGMEM =
@@ -130,14 +130,14 @@ static uint8_t const BM[8] PROGMEM =
         0b11110};
 #else
     {
-      0b11111,
-      0b11111,
-      0b00000,
-      0b00000,
-      0b00000,
-      0b11111,
-      0b11111,
-      0b11111};
+        0b11111,
+        0b11111,
+        0b00000,
+        0b00000,
+        0b00000,
+        0b11111,
+        0b11111,
+        0b11111};
 #endif
 
 // массивы сегментов для отрисовки цифр
@@ -270,8 +270,11 @@ void printProgressBar(int8_t _data)
   case SET_BASS:
   case SET_MIDDLE:
   case SET_TREBBLE:
-  case SET_BALANCE:
     x = _data + 7;
+    flat = false;
+    break;
+  case SET_BALANCE:
+    x = (_data + 14) / 2;
     flat = false;
     break;
   default:

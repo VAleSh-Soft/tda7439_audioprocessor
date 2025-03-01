@@ -84,7 +84,7 @@ void readInputData(TDA_DATA &_data, TDA7439_input _input)
   _data.bass = _check_data(read_eeprom_8(index), -7, 7);
   _data.middle = _check_data(read_eeprom_8(index + 1), -7, 7);
   _data.trebble = _check_data(read_eeprom_8(index + 2), -7, 7);
-  _data.balance = _check_data(read_eeprom_8(index + 3), -7, 7);
+  _data.balance = _check_data(read_eeprom_8(index + 3), -14, 14);
   _data.input_gain = (read_eeprom_8(index + 4) > 15) ? 5 : read_eeprom_8(index + 4);
 }
 
