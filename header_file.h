@@ -9,21 +9,21 @@
 // ===================================================
 
 #define NUMBER_OF_INPUT_IS_USED 4 // количество используемых входов TDA7439; 1..4
-#define USE_BT_MODULE 4           // использовать Bluetooth трансмиттер на указанном входе; 0 - не использовать
+#define USE_BT_MODULE_ON_INPUT 4  // использовать Bluetooth трансмиттер на указанном входе; 0 - не использовать
 
 constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 10; // таймаут автовозврата в режим по умолчанию, секунд
 constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут задержки автосохранения настроек, секунд
 
 constexpr bool INT_PULLUP_OF_ROTARY_PINS = true; // используется внутренняя подтяжка пинов к VCC, установите false, если ваш модуль энкодера использует внешнюю подтяжку
 
-#if USE_BT_MODULE > 0 && USE_BT_MODULE <= NUMBER_OF_INPUT_IS_USED
+#if USE_BT_MODULE_ON_INPUT > 0 && USE_BT_MODULE_ON_INPUT <= NUMBER_OF_INPUT_IS_USED
 constexpr uint8_t BT_CONTROL_LEVEL = HIGH; // управляющий уровень для включения модуля Bt
 #endif
 
 constexpr uint8_t ENC_A_PIN = 4;  // пин A энкодера (DT)
 constexpr uint8_t ENC_B_PIN = 5;  // пин B энкодера (CLK)
 constexpr uint8_t BUTTON_PIN = 3; // пин кнопки энкодера (SW)
-#if USE_BT_MODULE > 0 && USE_BT_MODULE <= NUMBER_OF_INPUT_IS_USED
+#if USE_BT_MODULE_ON_INPUT > 0 && USE_BT_MODULE_ON_INPUT <= NUMBER_OF_INPUT_IS_USED
 constexpr uint8_t BT_POWER_PIN = 6; // пин для управления питанием Bt-модуля
 constexpr uint8_t BT_LED_PIN = 8;   // пин светодиода - индикатора включения Bt-модуля
 #endif
@@ -40,8 +40,15 @@ constexpr uint16_t EEPROM_INDEX_FOR_DATA_4 = 27; // индекс в EEPROM дл�
 // ===================================================
 
 #if NUMBER_OF_INPUT_IS_USED == 0
-#error "Ask the correct value of NUMBER_OF_INPUT_IS_USED - 1..4"
+#error "Set the correct value of NUMBER_OF_INPUT_IS_USED - 1..4"
 #endif
+
+#if USE_BT_MODULE_ON_INPUT > 0 && USE_BT_MODULE_ON_INPUT <= NUMBER_OF_INPUT_IS_USED
+#define BT_MODULE_IS_USED 1
+#else
+#define BT_MODULE_IS_USED 0
+#endif
+
 
 // ===================================================
 

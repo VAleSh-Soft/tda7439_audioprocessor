@@ -56,7 +56,6 @@ public:
 	/**
 	 * @brief инициализация TDA7439
 	 *
-	 * @param wire I2C-интерфейс для работы с TDA7439
 	 */
 	void begin();
 

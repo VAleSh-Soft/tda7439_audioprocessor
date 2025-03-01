@@ -178,16 +178,16 @@ void ledGuard()
     }
   }
 
-#if USE_BT_MODULE > 0 && USE_BT_MODULE <= NUMBER_OF_INPUT_IS_USED
+#if BT_MODULE_IS_USED
   // светодиод Bt-модуля горит только если выбран его вход, и питание на Bt-модуль подано
-  digitalWrite(BT_LED_PIN, (cur_input == (TDA7439_input)(4 - USE_BT_MODULE) &&
+  digitalWrite(BT_LED_PIN, (cur_input == (TDA7439_input)(4 - USE_BT_MODULE_ON_INPUT) &&
                             digitalRead(BT_POWER_PIN) == BT_CONTROL_LEVEL));
 #endif
 }
 
 void powerShutdownGuard()
 {
-  tda.mute(); // главное, что делает монитор напряжения питания - отключает звук при его пропадании, чтобы избежать щелчка в колонках
+  tda.mute(); // главное, что делает монитор напряжения питания - отключает звук при выключении, чтобы избежать щелчка в колонках
   digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
   // если питание отключено, то запрещаем сохранение данных, т.к. есть риск, что питание пропадет в момент записи в EEPROM, и данные будут потеряны
   no_save_flag = true;
@@ -201,7 +201,7 @@ void setup()
 
   // ---------------------------------------------------
 
-#if USE_BT_MODULE > 0 && USE_BT_MODULE <= NUMBER_OF_INPUT_IS_USED
+#if BT_MODULE_IS_USED
   digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
   pinMode(BT_POWER_PIN, OUTPUT);
   pinMode(BT_LED_PIN, OUTPUT);
