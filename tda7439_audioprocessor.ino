@@ -101,24 +101,32 @@ void changeCurData(bool _up)
     tda.setVolume(cur_volume);
     printNumData(cur_volume);
     printProgressBar(cur_volume);
+    TDA_PRINT(F("New volume set: "));
+    TDA_PRINTLN(cur_volume);
     break;
   case SET_BASS:
     _change_data(cur_data.bass, -7, 7, _up);
     tda.setSnd(cur_data.bass, BASS);
     printNumData(cur_data.bass);
     printProgressBar(cur_data.bass);
+    TDA_PRINT(F("New bass set: "));
+    TDA_PRINTLN(cur_data.bass);
     break;
   case SET_MIDDLE:
     _change_data(cur_data.middle, -7, 7, _up);
     tda.setSnd(cur_data.middle, MIDDLE);
     printNumData(cur_data.middle);
     printProgressBar(cur_data.middle);
+    TDA_PRINT(F("New middle set: "));
+    TDA_PRINTLN(cur_data.middle);
     break;
   case SET_TREBBLE:
     _change_data(cur_data.trebble, -7, 7, _up);
     tda.setSnd(cur_data.trebble, TREBBLE);
     printNumData(cur_data.trebble);
     printProgressBar(cur_data.trebble);
+    TDA_PRINT(F("New trebble set: "));
+    TDA_PRINTLN(cur_data.trebble);
     break;
   case SET_INPUT_GAIN:
     x = cur_data.input_gain;
@@ -127,12 +135,16 @@ void changeCurData(bool _up)
     tda.inputGain(cur_data.input_gain);
     printNumData(cur_data.input_gain);
     printProgressBar(cur_data.input_gain);
+    TDA_PRINT(F("New input gain set: "));
+    TDA_PRINTLN(cur_data.input_gain);
     break;
   case SET_BALANCE:
     _change_data(cur_data.balance, -14, 14, _up);
     setBalance(cur_data.balance);
     printNumData(cur_data.balance);
     printProgressBar(cur_data.balance);
+    TDA_PRINT(F("New balance set: "));
+    TDA_PRINTLN(cur_data.balance);
     break;
   default:
     break;
@@ -151,14 +163,9 @@ void returnToDefMode()
 
 void saveSettingsInEeprom()
 {
-  if (no_save_flag)
-  {
-    return;
-  }
-
+  tasks.stopTask(save_settings_in_eeprom);
   write_eeprom_8(EEPROM_INDEX_FOR_VOLUME, cur_volume);
   writeInputData(cur_data, cur_input);
-  tasks.stopTask(save_settings_in_eeprom);
 }
 
 void ledGuard()
@@ -194,13 +201,16 @@ void powerShutdownGuard()
 #endif
   // если питание отключено, то запрещаем сохранение данных, т.к. есть риск, что питание пропадет в момент записи в EEPROM, и данные будут потеряны
   no_save_flag = true;
+  TDA_PRINTLN(F("The power of the device is shutdown"));
 }
 
 // ===================================================
 
 void setup()
 {
-  Serial.begin(115200);
+#if USE_DEBUG_OUT
+  Serial.begin(DEBUG_BAUD_COUNT);
+#endif
 
   // ---------------------------------------------------
 
@@ -213,6 +223,16 @@ void setup()
 
   // ---------------------------------------------------
 
+#if __USE_EEPROM_IN_FLASH__
+  // инициализация EEPROM
+  eeprom_init(EEPROM_SIZE);
+#endif
+  display_init();
+  tda_init();
+  enc.begin(INT_PULLUP_OF_ROTARY_PINS);
+
+  // ---------------------------------------------------
+
   return_to_default_mode = tasks.addTask(TIMEOUT_OF_RETURN_TO_DEFMODE * 1000, returnToDefMode);
   save_settings_in_eeprom = tasks.addTask(TIMEOUT_OF_AUTOSAVE_DATA * 1000, saveSettingsInEeprom, false);
   led_guard = tasks.addTask(50ul, ledGuard);
@@ -221,16 +241,11 @@ void setup()
 
   attachInterrupt(0, powerShutdownGuard, FALLING);
   no_save_flag = false;
-  
+
   // ---------------------------------------------------
 
-#if __USE_EEPROM_IN_FLASH__
-  // инициализация EEPROM
-  eeprom_init(EEPROM_SIZE);
-#endif
-  display_init();
-  enc.begin(INT_PULLUP_OF_ROTARY_PINS);
-  tda_init();
+  TDA_PRINTLN(F("Start device"));
+  TDA_PRINTLN();
 }
 
 void loop()

@@ -4,7 +4,7 @@
 #include <Wire.h>
 #include <Arduino.h>
 
-#define I2C_PORT Wire
+#define I2C_PORT Wire // используемый I2C-интерфейс для управления TDA7439
 
 // 7-битный адрес микросхемы на шине I2C
 #define TDA7439_address 0x44

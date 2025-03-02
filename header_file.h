@@ -10,6 +10,8 @@
 
 #define NUMBER_OF_INPUT_IS_USED 4 // количество используемых входов TDA7439; 1..4
 #define USE_BT_MODULE_ON_INPUT 4  // использовать Bluetooth трансмиттер на указанном входе; 0 - не использовать
+#define USE_DEBUG_OUT 0           // включить вывод отладочной информации в сериал
+#define DEBUG_BAUD_COUNT 115200   // скорость передачи данных в сериал
 
 constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 10; // таймаут автовозврата в режим по умолчанию, секунд
 constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут задержки автосохранения настроек, секунд
@@ -39,7 +41,7 @@ constexpr uint16_t EEPROM_INDEX_FOR_DATA_4 = 27; // индекс в EEPROM дл�
 
 // ===================================================
 
-#if NUMBER_OF_INPUT_IS_USED == 0
+#if NUMBER_OF_INPUT_IS_USED < 1
 #error "Set the correct value of NUMBER_OF_INPUT_IS_USED - 1..4"
 #endif
 
@@ -47,6 +49,14 @@ constexpr uint16_t EEPROM_INDEX_FOR_DATA_4 = 27; // индекс в EEPROM дл�
 #define BT_MODULE_IS_USED 1
 #else
 #define BT_MODULE_IS_USED 0
+#endif
+
+#if USE_DEBUG_OUT
+#define TDA_PRINTLN(x) Serial.println(x)
+#define TDA_PRINT(x) Serial.print(x)
+#else
+#define TDA_PRINTLN(x)
+#define TDA_PRINT(x)
 #endif
 
 // ===================================================
