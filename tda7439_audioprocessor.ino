@@ -70,6 +70,7 @@ void checkRotary()
         tda.setVolume(cur_volume);
       }
     }
+    printCurScreen();
     break;
   }
 }

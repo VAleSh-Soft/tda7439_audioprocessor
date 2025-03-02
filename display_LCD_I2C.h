@@ -310,7 +310,7 @@ void printCurScreen()
     switch (cur_mode)
     {
     case SET_VOLUME:
-      _data = cur_volume;
+      _data = (mute_flag) ? 0 : cur_volume;
       display.print(F("  Volume"));
       break;
     case SET_INPUT_GAIN:
