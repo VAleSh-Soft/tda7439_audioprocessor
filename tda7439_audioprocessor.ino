@@ -48,7 +48,6 @@ void checkRotary()
       enc_btn.resetButtonState();
       // переключение текущего входа
       cur_mode = SET_INPUT;
-      printCurScreen();
       switch (enc_res)
       {
       case DIR_CW:
@@ -58,7 +57,8 @@ void checkRotary()
         next_input--;
         break;
       }
-      printBigChar(4 - (uint8_t)next_input);
+
+      printCurScreen();
     }
     else
 #endif
@@ -98,8 +98,8 @@ void checkRotary()
 #endif
 
 #if USE_MODE_BUTTON
-switch (mode_btn.getButtonState())
-{
+  switch (mode_btn.getButtonState())
+  {
   case BTN_ONECLICK:
     // переключение текущего режима
     setNewMode();
@@ -108,7 +108,7 @@ switch (mode_btn.getButtonState())
     // вход в режим установки предусиления
     setNewMode(true);
     break;
-}
+  }
 #endif
 
 #if USE_INPUT_BUTTON

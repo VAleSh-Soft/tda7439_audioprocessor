@@ -63,7 +63,10 @@ void setInputData(TDA7439_input _input)
   TDA_PRINT(F("Input gain: "));
   TDA_PRINTLN(cur_data.input_gain);
 
-  tda.setVolume(cur_volume);
+  if (!mute_flag)
+  {
+    tda.setVolume(cur_volume);
+  }
 }
 
 void setBalance(int8_t _balance)
