@@ -12,6 +12,9 @@
 #define USE_BT_MODULE_ON_INPUT 4  // использовать Bluetooth трансмиттер на указанном входе; 0 - не использовать
 #define USE_DEBUG_OUT 0           // включить вывод отладочной информации в сериал
 #define DEBUG_BAUD_COUNT 115200   // скорость передачи данных в сериал
+#define USE_MUTE_BUTTON 0         // использовать кнопку для быстрого отключения звука
+#define USE_MODE_BUTTON 0         // использовать кнопку для переключения режима управления
+#define USE_INPUT_BUTTON 0        // использовать кнопку для переключения входа
 
 constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 10; // таймаут автовозврата в режим по умолчанию, секунд
 constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут задержки автосохранения настроек, секунд
@@ -22,15 +25,24 @@ constexpr bool INT_PULLUP_OF_ROTARY_PINS = true; // используется в�
 constexpr uint8_t BT_CONTROL_LEVEL = HIGH; // управляющий уровень для включения модуля Bt
 #endif
 
-constexpr uint8_t ENC_A_PIN = 4;  // пин A энкодера (DT)
-constexpr uint8_t ENC_B_PIN = 5;  // пин B энкодера (CLK)
-constexpr uint8_t BUTTON_PIN = 3; // пин кнопки энкодера (SW)
+constexpr uint8_t ENC_A_PIN = 4;      // пин A энкодера (DT)
+constexpr uint8_t ENC_B_PIN = 5;      // пин B энкодера (CLK)
+constexpr uint8_t ENC_BUTTON_PIN = 3; // пин кнопки энкодера (SW)
 #if USE_BT_MODULE_ON_INPUT > 0 && USE_BT_MODULE_ON_INPUT <= NUMBER_OF_INPUT_IS_USED
 constexpr uint8_t BT_POWER_PIN = 6; // пин для управления питанием Bt-модуля
 constexpr uint8_t BT_LED_PIN = 8;   // пин светодиода - индикатора включения Bt-модуля
 #endif
 constexpr uint8_t MUTE_LED_PIN = 9;        // пин светодиода mute
 constexpr uint8_t VOLTAGE_CONTROL_PIN = 2; // пин контроля пропадания напряжения
+#if USE_MUTE_BUTTON
+constexpr uint8_t MUTE_BUTTON_PIN = 7; // пин кнопки для отключения звука
+#endif
+#if USE_MODE_BUTTON
+constexpr uint8_t MODE_BUTTON_PIN = 10; // пин кнопки для переключения режима управления
+#endif
+#if USE_INPUT_BUTTON
+constexpr uint8_t INPUT_BUTTON_PIN = 11; // пин кнопки для переключения входа
+#endif
 
 constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10; // индекс в EEPROM для сохранения текущей громкости (1 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_INPUT = 11;  // индекс в EEPROM для сохранения текущего входа (1 байт)
@@ -117,12 +129,14 @@ TDA_CUR_MODE operator++(TDA_CUR_MODE &obj, const int)
 
 // ==== tda7439_audioprocessor.ino ===================
 
-void checkRotary();           // опрос энкодера и его кнопки
-void changeCurData(bool _up); // изменение текущего параметра
-void returnToDefMode();       // возврат в режим по умолчанию
-void saveSettingsInEeprom();  // сохранение настроек в EEPROM
-void ledGuard();              // управление светодиодом
-void powerShutdownGuard();    // контроль за пропаданием напряжения питания
+void setMute();                          // управление режимом mute
+void setNewMode(bool gain_mode = false); // переход к следующему режиму работы модуля
+void checkRotary();                      // опрос энкодера, его кнопки и прочих кнопок, при их наличии
+void changeCurData(bool _up);            // изменение текущего параметра
+void returnToDefMode();                  // возврат в режим по умолчанию
+void saveSettingsInEeprom();             // сохранение настроек в EEPROM
+void ledGuard();                         // управление светодиодом
+void powerShutdownGuard();               // контроль за пропаданием напряжения питания
 
 // ==== _eeprom.h ====================================
 
@@ -187,7 +201,16 @@ public:
   }
 };
 
-tdaButton btn(BUTTON_PIN);
+tdaButton enc_btn(ENC_BUTTON_PIN);
+#if USE_MUTE_BUTTON
+tdaButton mute_btn(MUTE_BUTTON_PIN);
+#endif
+#if USE_MODE_BUTTON
+tdaButton mode_btn(MODE_BUTTON_PIN);
+#endif
+#if USE_INPUT_BUTTON
+tdaButton input_btn(INPUT_BUTTON_PIN); // пин кнопки для переключения входа
+#endif
 
 // ===================================================
 
@@ -243,7 +266,7 @@ static TDA7439_input getNextInput(const TDA7439_input obj)
     return (INPUT_4);
 #endif
   default:
-    return ((TDA7439_input)(4 - NUMBER_OF_INPUT_IS_USED));
+    return (INPUT_1);
   }
 }
 
@@ -261,8 +284,14 @@ static TDA7439_input getPrevInput(const TDA7439_input obj)
   case INPUT_4:
     return (INPUT_3);
 #endif
-  default:
-    return (INPUT_1);
+  case INPUT_1:
+#if NUMBER_OF_INPUT_IS_USED == 2
+    return (INPUT_2);
+#elif NUMBER_OF_INPUT_IS_USED == 3
+    return (INPUT_3);
+#else
+    return (INPUT_4);
+#endif
   }
 }
 

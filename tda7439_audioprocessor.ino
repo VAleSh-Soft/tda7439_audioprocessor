@@ -5,17 +5,47 @@
 
 // ===================================================
 
+void setMute()
+{
+  if (!no_mute)
+  {
+    mute_flag = !mute_flag;
+    if (mute_flag)
+    {
+      tda.mute();
+    }
+    else
+    {
+      tda.setVolume(cur_volume);
+    }
+  }
+  printCurScreen();
+}
+
+void setNewMode(bool gain_mode)
+{
+  if (gain_mode)
+  {
+    cur_mode = SET_INPUT_GAIN;
+  }
+  else
+  {
+    cur_mode++;
+  }
+  printCurScreen();
+}
+
 void checkRotary()
 {
   unsigned char enc_res = enc.process();
   if (enc_res)
   {
 #if NUMBER_OF_INPUT_IS_USED > 1
-    if (btn.isButtonClosed())
+    if (enc_btn.isButtonClosed())
     {
       new_input = true;
       no_mute = true;
-      btn.resetButtonState();
+      enc_btn.resetButtonState();
       // переключение текущего входа
       cur_mode = SET_INPUT;
       printCurScreen();
@@ -37,12 +67,11 @@ void checkRotary()
     }
   }
 
-  switch (btn.getButtonState())
+  switch (enc_btn.getButtonState())
   {
   case BTN_ONECLICK:
     // переключение текущего режима
-    cur_mode++;
-    printCurScreen();
+    setNewMode();
     break;
   case BTN_UP:
     // переключение текущего входа, если нужно
@@ -54,25 +83,40 @@ void checkRotary()
     break;
   case BTN_DBLCLICK:
     // вход в режим установки предусиления
-    cur_mode = SET_INPUT_GAIN;
-    printCurScreen();
+    setNewMode(true);
     break;
   case BTN_LONGCLICK:
-    if (!no_mute)
-    {
-      mute_flag = !mute_flag;
-      if (mute_flag)
-      {
-        tda.mute();
-      }
-      else
-      {
-        tda.setVolume(cur_volume);
-      }
-    }
-    printCurScreen();
+    setMute();
     break;
   }
+
+#if USE_MUTE_BUTTON
+  if (mute_btn.getButtonState() == BTN_DOWN)
+  {
+    setMute();
+  }
+#endif
+
+#if USE_MODE_BUTTON
+switch (mode_btn.getButtonState())
+{
+  case BTN_ONECLICK:
+    // переключение текущего режима
+    setNewMode();
+    break;
+  case BTN_DBLCLICK:
+    // вход в режим установки предусиления
+    setNewMode(true);
+    break;
+}
+#endif
+
+#if USE_INPUT_BUTTON
+  if (input_btn.getButtonState() == BTN_DOWN)
+  {
+    switchingInput(++next_input);
+  }
+#endif
 }
 
 static void _change_data(int8_t &_data, int8_t _min, int8_t _max, bool _up)
