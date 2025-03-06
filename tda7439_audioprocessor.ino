@@ -63,7 +63,16 @@ void checkRotary()
     else
 #endif
     {
-      changeCurData(enc_res == DIR_CW);
+      if (mute_flag) // если поднят флаг mute_flag, то первый щелчок энкодера просто его сбрасывает и только последующие щелчки регулируют текущий параметр
+      {
+        mute_flag = false;
+        tda.setVolume(cur_volume);
+        printCurScreen();
+      }
+      else
+      {
+        changeCurData(enc_res == DIR_CW);
+      }
     }
   }
 

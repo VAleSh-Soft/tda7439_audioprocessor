@@ -193,6 +193,11 @@ public:
     case BTN_DOWN:
     case BTN_DBLCLICK:
       setBacklight(true);
+      if (!tasks.getTaskState(return_to_default_mode))
+      {
+        // если экран погашен, щелчок кнопкой просто включает его, не выполняя заложенное на щелчок действие; исключение - кнопки mute_btn и input_btn, они срабатывают в любом случае
+        resetButtonState();
+      }
       tasks.startTask(return_to_default_mode);
       tasks.startTask(save_settings_in_eeprom);
       break;
