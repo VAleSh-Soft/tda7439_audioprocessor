@@ -40,6 +40,7 @@ void checkRotary()
   unsigned char enc_res = enc.process();
   if (enc_res)
   {
+    // обработка поворота энкодера
 #if NUMBER_OF_INPUT_IS_USED > 1
     if (enc_btn.isButtonClosed())
     {
@@ -76,6 +77,7 @@ void checkRotary()
     }
   }
 
+  // обработка событий кнопки энкодера
   switch (enc_btn.getButtonState())
   {
   case BTN_ONECLICK:
@@ -95,6 +97,7 @@ void checkRotary()
     setNewMode(true);
     break;
   case BTN_LONGCLICK:
+    // отключение звука
     setMute();
     break;
   }
@@ -102,6 +105,7 @@ void checkRotary()
 #if USE_MUTE_BUTTON
   if (mute_btn.getButtonState() == BTN_DOWN)
   {
+    // отключение звука
     setMute();
   }
 #endif
@@ -123,6 +127,7 @@ void checkRotary()
 #if USE_INPUT_BUTTON
   if (input_btn.getButtonState() == BTN_DOWN)
   {
+    // переключение текущего входа
     switchingInput(++next_input);
   }
 #endif
@@ -210,8 +215,10 @@ void returnToDefMode()
 {
   cur_mode = SET_VOLUME;
   printCurScreen();
+#if TURN_OFF_SCREEN_BACKLIGHT
   tasks.stopTask(return_to_default_mode);
   setBacklight(false);
+#endif
 }
 
 void saveSettingsInEeprom()

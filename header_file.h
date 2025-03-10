@@ -8,13 +8,14 @@
 
 // ===================================================
 
-#define NUMBER_OF_INPUT_IS_USED 4 // количество используемых входов TDA7439; 1..4
-#define USE_BT_MODULE_ON_INPUT 4  // использовать Bluetooth трансмиттер на указанном входе; 0 - не использовать
-#define USE_DEBUG_OUT 0           // включить вывод отладочной информации в сериал
-#define DEBUG_BAUD_COUNT 115200   // скорость передачи данных в сериал
-#define USE_MUTE_BUTTON 0         // использовать кнопку для быстрого отключения звука
-#define USE_MODE_BUTTON 0         // использовать кнопку для переключения режима управления
-#define USE_INPUT_BUTTON 0        // использовать кнопку для переключения входа
+#define NUMBER_OF_INPUT_IS_USED 4   // количество используемых входов TDA7439; 1..4
+#define USE_BT_MODULE_ON_INPUT 4    // использовать Bluetooth трансмиттер на указанном входе; 0 - не использовать
+#define USE_DEBUG_OUT 0             // включить вывод отладочной информации в сериал
+#define DEBUG_BAUD_COUNT 115200     // скорость передачи данных в сериал
+#define USE_MUTE_BUTTON 0           // использовать кнопку для быстрого отключения звука
+#define USE_MODE_BUTTON 0           // использовать кнопку для переключения режима управления
+#define USE_INPUT_BUTTON 0          // использовать кнопку для переключения входа
+#define TURN_OFF_SCREEN_BACKLIGHT 1 // отключать экран при возврате в режим по умолчанию
 
 constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 10; // таймаут автовозврата в режим по умолчанию, секунд
 constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут задержки автосохранения настроек, секунд
