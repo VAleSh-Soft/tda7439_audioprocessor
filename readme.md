@@ -1,4 +1,4 @@
-## TDA7439_audioprocessor v 1.0
+## TDA7439_audioprocessor v 1.4
 
 Модуль для работы с аудиопроцессором TDA7439, построенный на **Arduino Uno/nano/pro mini** (**ATmega168/328**)
 
