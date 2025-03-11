@@ -215,8 +215,8 @@ void returnToDefMode()
 {
   cur_mode = SET_VOLUME;
   printCurScreen();
-#if TURN_OFF_SCREEN_BACKLIGHT
   tasks.stopTask(return_to_default_mode);
+#if TURN_OFF_SCREEN_BACKLIGHT
   setBacklight(false);
 #endif
 }
