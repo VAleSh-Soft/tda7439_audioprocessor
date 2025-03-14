@@ -247,7 +247,7 @@ tdaRotary enc;
 
 TDA_CUR_MODE cur_mode = SET_VOLUME; // текущий режим работы модуля
 TDA7439_input cur_input = INPUT_1;  // текущий вход
-TDA7439_input next_input = INPUT_1; // вход для переключения
+TDA7439_input next_input = cur_input; // вход для переключения
 bool new_input = false;             // флаг необходимости переключения входа
 
 uint8_t cur_volume = 20;            // текущая громкость
@@ -331,6 +331,11 @@ TDA7439_input operator--(TDA7439_input &obj, const int)
   return (copy);
 }
 #endif
+
+// ===================================================
+
+inline uint8_t getInput(TDA7439_input obj) { return (4 - (uint8_t)obj); }
+inline TDA7439_input getInput(uint8_t obj) { return ((TDA7439_input)(4 - obj)); }
 
 // ===================================================
 

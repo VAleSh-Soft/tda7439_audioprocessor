@@ -241,14 +241,14 @@ void printInData()
 {
   display.setCursor(0, 0);
 #if BT_MODULE_IS_USED
-  if (cur_input == (TDA7439_input)(4 - USE_BT_MODULE_ON_INPUT))
+  if (cur_input == getInput(USE_BT_MODULE_ON_INPUT))
   {
     display.print("Bt");
   }
   else
 #endif
   {
-    display.print(4 - (uint8_t)cur_input);
+    display.print(getInput(cur_input));
     display.print(" ");
   }
 }
@@ -345,7 +345,7 @@ void printCurScreen()
     display.print(F("Next"));
     display.setCursor(3, 1);
     display.print(F("input"));
-    printBigChar(4 - (uint8_t)next_input);
+    printBigChar(getInput(next_input));
   }
 }
 

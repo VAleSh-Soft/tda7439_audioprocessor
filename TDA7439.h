@@ -112,64 +112,64 @@ TDA7439::TDA7439() {}
 
 void TDA7439::begin()
 {
-  I2C_PORT.begin();
+	I2C_PORT.begin();
 }
 
 void TDA7439::setInput(TDA7439_input input)
 {
-  writeWire(TDA7439_INPUT_SEL, (uint8_t)input);
+	writeWire(TDA7439_INPUT_SEL, (uint8_t)input);
 }
 
 void TDA7439::inputGain(uint8_t input_gain)
 {
-  if (input_gain > 15)
-  {
-    input_gain = 15;
-  }
-  writeWire(TDA7439_INPUT_GAIN, input_gain);
+	if (input_gain > 15)
+	{
+		input_gain = 15;
+	}
+	writeWire(TDA7439_INPUT_GAIN, input_gain);
 }
 
 void TDA7439::setVolume(uint8_t volume)
 {
-  volume = (volume) ? ((volume <= 47) ? 47 - volume : 0) : TDA7439_MUTE;
-  writeWire(TDA7439_VOLUME, volume);
+	volume = (volume) ? ((volume <= 47) ? 47 - volume : 0) : TDA7439_MUTE;
+	writeWire(TDA7439_VOLUME, volume);
 }
 
 void TDA7439::setSnd(int8_t val, TDA7439_bands range)
 {
-  val = (val < -7) ? -7 : ((val > 7) ? 7 : val);
-  val = (val > 0) ? 15 - val : val + 7;
-  writeWire((uint8_t)range, val);
+	val = (val < -7) ? -7 : ((val > 7) ? 7 : val);
+	val = (val > 0) ? 15 - val : val + 7;
+	writeWire((uint8_t)range, val);
 }
 
 void TDA7439::mute()
 {
-  writeWire(TDA7439_VOLUME, TDA7439_MUTE);
+	writeWire(TDA7439_VOLUME, TDA7439_MUTE);
 }
 
 void TDA7439::spkAtt(uint8_t att_r, uint8_t att_l)
 {
-  // Mainly used to override the default attenuation of mute_flag at power up
-  // can be used for balance with some simple code changes here.
-  if (att_l > 79)
-  {
-    att_l = 79;
-  }
-  if (att_r > 79)
-  {
-    att_r = 79;
-  }
+	// Mainly used to override the default attenuation of mute_flag at power up
+	// can be used for balance with some simple code changes here.
+	if (att_l > 79)
+	{
+		att_l = 79;
+	}
+	if (att_r > 79)
+	{
+		att_r = 79;
+	}
 
-  writeWire(TDA7439_RATT, att_r);
-  writeWire(TDA7439_LATT, att_l);
+	writeWire(TDA7439_RATT, att_r);
+	writeWire(TDA7439_LATT, att_l);
 }
 
 void TDA7439::writeWire(uint8_t reg, uint8_t data)
 {
-  I2C_PORT.beginTransmission(TDA7439_address);
-  I2C_PORT.write(reg);
-  I2C_PORT.write(data);
-  I2C_PORT.endTransmission();
+	I2C_PORT.beginTransmission(TDA7439_address);
+	I2C_PORT.write(reg);
+	I2C_PORT.write(data);
+	I2C_PORT.endTransmission();
 }
 
 // ===================================================

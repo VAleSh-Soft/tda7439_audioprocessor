@@ -51,7 +51,7 @@ void setInputData(TDA7439_input _input)
 
   TDA_PRINTLN(F("New input data for TDA7439"));
   TDA_PRINT(F("Input: "));
-  TDA_PRINTLN(4 - (uint8_t)cur_input);
+  TDA_PRINTLN(getInput(cur_input));
   TDA_PRINT(F("Bass: "));
   TDA_PRINTLN(cur_data.bass);
   TDA_PRINT(F("Middle: "));
@@ -95,14 +95,14 @@ void switchingInput(TDA7439_input _input, bool _init)
     }
 
     TDA_PRINT(F("New input: "));
-    TDA_PRINTLN(4 - (uint8_t)_input);
+    TDA_PRINTLN(getInput(_input));
 
 #if BT_MODULE_IS_USED
     // питание Bt-модуля включаем при первом переходе на вход, к
     // которому он подключен; при переходе на другой вход питание
     // Bt-модуля не выключаем, чтобы иметь возможность переключать
     // входы TDA7439 без потери сигнала
-    if (_input == (TDA7439_input)(4 - USE_BT_MODULE_ON_INPUT))
+    if (_input == getInput(USE_BT_MODULE_ON_INPUT))
     {
       digitalWrite(BT_POWER_PIN, BT_CONTROL_LEVEL);
       TDA_PRINTLN(F("Bluetooth module is connected"));

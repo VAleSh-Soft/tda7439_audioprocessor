@@ -248,7 +248,7 @@ void ledGuard()
 
 #if BT_MODULE_IS_USED
   // светодиод Bt-модуля горит только если выбран его вход, и питание на Bt-модуль подано
-  digitalWrite(BT_LED_PIN, (cur_input == (TDA7439_input)(4 - USE_BT_MODULE_ON_INPUT) &&
+  digitalWrite(BT_LED_PIN, (cur_input == getInput(USE_BT_MODULE_ON_INPUT) &&
                             digitalRead(BT_POWER_PIN) == BT_CONTROL_LEVEL));
 #endif
 }
