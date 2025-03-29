@@ -190,7 +190,7 @@ void changeCurData(bool _up)
     x = cur_data.input_gain;
     _change_data(x, 0, 15, _up);
     cur_data.input_gain = x;
-    tda.inputGain(cur_data.input_gain);
+    tda.setInputGain(cur_data.input_gain);
     printNumData(cur_data.input_gain);
     printProgressBar(cur_data.input_gain);
     TDA_PRINT(F("New input gain set: "));

@@ -71,7 +71,7 @@ public:
 	 *
 	 * @param input_gain уровень усиления; 0..15
 	 */
-	void inputGain(uint8_t input_gain);
+	void setInputGain(uint8_t input_gain);
 
 	/**
 	 * @brief установка громкости
@@ -120,7 +120,7 @@ void TDA7439::setInput(TDA7439_input input)
 	writeWire(TDA7439_INPUT_SEL, (uint8_t)input);
 }
 
-void TDA7439::inputGain(uint8_t input_gain)
+void TDA7439::setInputGain(uint8_t input_gain)
 {
 	if (input_gain > 15)
 	{

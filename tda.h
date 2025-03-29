@@ -46,7 +46,7 @@ void setInputData(TDA7439_input _input)
   tda.setSnd(cur_data.bass, BASS);
   tda.setSnd(cur_data.middle, MIDDLE);
   tda.setSnd(cur_data.trebble, TREBBLE);
-  tda.inputGain(cur_data.input_gain);
+  tda.setInputGain(cur_data.input_gain);
   setBalance(cur_data.balance);
 
   TDA_PRINTLN(F("New input data for TDA7439"));
