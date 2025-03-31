@@ -86,6 +86,7 @@ void readInputData(TDA_DATA &_data, TDA7439_input _input)
   _data.trebble = _check_data(read_eeprom_8(index + 2), -7, 7);
   _data.balance = _check_data(read_eeprom_8(index + 3), -14, 14);
   _data.input_gain = (read_eeprom_8(index + 4) > 15) ? 5 : read_eeprom_8(index + 4);
+  _data.spk_att = (read_eeprom_8(index + 5) > 15) ? 5 : read_eeprom_8(index + 5);
 }
 
 void writeInputData(TDA_DATA &_data, TDA7439_input _input)
@@ -97,6 +98,7 @@ void writeInputData(TDA_DATA &_data, TDA7439_input _input)
   write_eeprom_8(index + 2, _data.trebble);
   write_eeprom_8(index + 3, _data.balance);
   write_eeprom_8(index + 4, _data.input_gain);
+  write_eeprom_8(index + 5, _data.spk_att);
 }
 
 #endif // _EEPROM_H

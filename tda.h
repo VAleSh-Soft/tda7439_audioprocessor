@@ -47,7 +47,7 @@ void setInputData(TDA7439_input _input)
   tda.setSnd(cur_data.middle, MIDDLE);
   tda.setSnd(cur_data.trebble, TREBBLE);
   tda.setInputGain(cur_data.input_gain);
-  setBalance(cur_data.balance);
+  setBalance(cur_data.balance, 0);
 
   TDA_PRINTLN(F("New input data for TDA7439"));
   TDA_PRINT(F("Input: "));
@@ -69,7 +69,7 @@ void setInputData(TDA7439_input _input)
   }
 }
 
-void setBalance(int8_t _balance)
+void setBalance(int8_t _balance, uint8_t _spk_att)
 {
   if (_balance > 14)
   {
@@ -79,9 +79,15 @@ void setBalance(int8_t _balance)
   {
     _balance = -14;
   }
+
+  if (_spk_att > 15)
+  {
+    _spk_att = 15;
+  }
+
   uint8_t right = (_balance < 0) ? -2 * _balance : 0;
   uint8_t left = (_balance > 0) ? 2 * _balance : 0;
-  tda.spkAtt(right, left);
+  tda.spkAtt(right + _spk_att, left + _spk_att);
 }
 
 void switchingInput(TDA7439_input _input, bool _init)
