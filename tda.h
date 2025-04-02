@@ -47,7 +47,7 @@ void setInputData(TDA7439_input _input)
   tda.setSnd(cur_data.middle, MIDDLE);
   tda.setSnd(cur_data.trebble, TREBBLE);
   tda.setInputGain(cur_data.input_gain);
-  setBalance(cur_data.balance, 0);
+  setBalance(cur_data.balance, cur_data.spk_att);
 
   TDA_PRINTLN(F("New input data for TDA7439"));
   TDA_PRINT(F("Input: "));
@@ -62,6 +62,9 @@ void setInputData(TDA7439_input _input)
   TDA_PRINTLN(cur_data.balance);
   TDA_PRINT(F("Input gain: "));
   TDA_PRINTLN(cur_data.input_gain);
+  TDA_PRINT(F("Speaker attenuation: "));
+  TDA_PRINTLN(cur_data.spk_att);
+  TDA_PRINTLN();
 
   if (!mute_flag)
   {
@@ -85,9 +88,9 @@ void setBalance(int8_t _balance, uint8_t _spk_att)
     _spk_att = 15;
   }
 
-  uint8_t right = (_balance < 0) ? -2 * _balance : 0;
-  uint8_t left = (_balance > 0) ? 2 * _balance : 0;
-  tda.spkAtt(right + _spk_att, left + _spk_att);
+  uint8_t right = (_balance < 0) ? -2 * _balance + _spk_att : _spk_att;
+  uint8_t left = (_balance > 0) ? 2 * _balance + _spk_att : _spk_att;
+  tda.spkAtt(right, left);
 }
 
 void switchingInput(TDA7439_input _input, bool _init)

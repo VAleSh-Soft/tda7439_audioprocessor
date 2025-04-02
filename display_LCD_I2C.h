@@ -314,10 +314,6 @@ void printCurScreen()
       _data = (mute_flag) ? 0 : cur_volume;
       display.print(F("  Volume"));
       break;
-    case SET_INPUT_GAIN:
-      _data = cur_data.input_gain;
-      display.print(F("InputGane"));
-      break;
     case SET_BASS:
       _data = cur_data.bass;
       display.print(F("  Bass"));
@@ -332,7 +328,11 @@ void printCurScreen()
       break;
     case SET_BALANCE:
       _data = cur_data.balance;
-      display.print(F(" Balance"));
+      display.print(F("  Balance"));
+      break;
+    case SET_INPUT_GAIN:
+      _data = cur_data.input_gain;
+      display.print(F("InputGane"));
       break;
     case SET_SPEAKER_ATT:
       _data = cur_data.spk_att;

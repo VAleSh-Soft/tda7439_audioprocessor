@@ -6,8 +6,7 @@
 
 // ===================================================
 
-#if (__USE_ARDUINO_ESP__ || defined(ARDUINO_ARCH_RP2040)) && \
-    (__USE_OTHER_SETTING__ || __USE_ON_OFF_DATA__)
+#if defined(ARDUINO_ARCH_ESP8266) || defined(ARDUINO_ARCH_ESP32) || defined(ARDUINO_ARCH_RP2040)
 #define __USE_EEPROM_IN_FLASH__ 1
 #ifndef EEPROM_SIZE
 #define EEPROM_SIZE 256
@@ -31,9 +30,9 @@ void eeprom_update(uint16_t _index, uint8_t _data)
 void eeprom_init(uint16_t _eeprom_size)
 {
   EEPROM.end();
-  if (_eeprom_size > 4096u || _eeprom_size == 0)
+  if (_eeprom_size > 4096 || _eeprom_size == 0)
   {
-    _eeprom_size = 4096;
+    _eeprom_size = 4096u;
   }
   EEPROM.begin(_eeprom_size);
 }
@@ -41,8 +40,7 @@ void eeprom_init(uint16_t _eeprom_size)
 
 uint8_t read_eeprom_8(uint16_t _index)
 {
-  uint8_t result = EEPROM.read(_index);
-  return result;
+  return (EEPROM.read(_index));
 }
 
 void write_eeprom_8(uint16_t _index, uint8_t _data)
@@ -57,20 +55,11 @@ void write_eeprom_8(uint16_t _index, uint8_t _data)
   }
 }
 
-static uint16_t _get_index(TDA7439_input _input)
-{
-  switch (_input)
-  {
-  case INPUT_1:
-    return (EEPROM_INDEX_FOR_DATA_1);
-  case INPUT_2:
-    return (EEPROM_INDEX_FOR_DATA_2);
-  case INPUT_3:
-    return (EEPROM_INDEX_FOR_DATA_3);
-  case INPUT_4:
-    return (EEPROM_INDEX_FOR_DATA_4);
-  }
-}
+static uint16_t cur_index[] = {
+    EEPROM_INDEX_FOR_DATA_4,
+    EEPROM_INDEX_FOR_DATA_3,
+    EEPROM_INDEX_FOR_DATA_2,
+    EEPROM_INDEX_FOR_DATA_1};
 
 static int8_t _check_data(int8_t _data, int8_t _min, int8_t _max)
 {
@@ -79,7 +68,7 @@ static int8_t _check_data(int8_t _data, int8_t _min, int8_t _max)
 
 void readInputData(TDA_DATA &_data, TDA7439_input _input)
 {
-  uint16_t index = _get_index(_input);
+  uint16_t index = cur_index[(uint8_t)_input];
 
   _data.bass = _check_data(read_eeprom_8(index), -7, 7);
   _data.middle = _check_data(read_eeprom_8(index + 1), -7, 7);
@@ -91,7 +80,7 @@ void readInputData(TDA_DATA &_data, TDA7439_input _input)
 
 void writeInputData(TDA_DATA &_data, TDA7439_input _input)
 {
-  uint16_t index = _get_index(_input);
+  uint16_t index = cur_index[(uint8_t)_input];
 
   write_eeprom_8(index, _data.bass);
   write_eeprom_8(index + 1, _data.middle);
