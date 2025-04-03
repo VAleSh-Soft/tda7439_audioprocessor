@@ -4,7 +4,7 @@
 #include <Rotary.h>        // https://github.com/brianlow/Rotary
 #include <shButton.h>      // https://github.com/VAleSh-Soft/shButton
 #include <shTaskManager.h> // https://github.com/VAleSh-Soft/shTaskManager
-#include <shTDA7439.h>
+#include <shTDA7439.h>     // https://github.com/VAleSh-Soft/shTDA7439
 
 // ===================================================
 
@@ -16,6 +16,8 @@
 #define USE_MODE_BUTTON 0           // использовать кнопку для переключения режима управления
 #define USE_INPUT_BUTTON 0          // использовать кнопку для переключения входа
 #define TURN_OFF_SCREEN_BACKLIGHT 1 // отключать экран при возврате в режим по умолчанию
+
+#define TDA7439_I2C_PORT Wire // шина I2C для управления TDA7439
 
 // ===================================================
 
@@ -163,9 +165,9 @@ void setBacklight(bool flag);        // управление подсветко�
 // ==== tda.h =========================================
 
 void tda_init();
-TDA7439_input readCurInput();                       // получение сохраненного значения входа из EEPROM
-void setInputData(TDA7439_input _input);            // первоначальная настройка TDA7439 для текущего входа
-void setBalance(int8_t _balance, uint8_t _spk_att); // установка баланса
+TDA7439_input readCurInput();            // получение сохраненного значения входа из EEPROM
+void setInputData(TDA7439_input _input); // первоначальная настройка TDA7439 для текущего входа
+void setBalance(int8_t _balance);        // установка баланса
 void switchingInput(TDA7439_input _input,
                     bool _init = false); // переключение входа
 

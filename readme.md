@@ -120,7 +120,7 @@ constexpr uint8_t ENC_BUTTON_PIN = 3; - пин кнопки энкодера (SW
 
 #### Шина I2C
 
-Управление микросхемой **TAD7439** идет через шину **I2C**. Адрес микросхемы на шине - `0x44`. Используется интерфейс по умолчанию - **Wire**. Однако, если нужно использовать другой интерфейс, его можно задать в файле **TDA7439.h** в строке `#define I2C_PORT Wire`
+Управление микросхемой **TAD7439** идет через шину **I2C**. Адрес микросхемы на шине - `0x44`. Используется интерфейс по умолчанию - **Wire**. Однако, если нужно использовать другой интерфейс, его можно задать в файле **header_file.h** в строке `#define TDA7439_I2C_PORT Wire`
 
 ***
 
@@ -130,6 +130,7 @@ constexpr uint8_t ENC_BUTTON_PIN = 3; - пин кнопки энкодера (SW
 **LiquidCrystal_PCF8574.h** - https://github.com/mathertel/LiquidCrystal_PCF8574<br>
 **shButton.h** - https://github.com/VAleSh-Soft/shButton<br>
 **shTaskManager.h** - https://github.com/VAleSh-Soft/shTaskManager<br>
+**shTDA7439.h** - https://github.com/VAleSh-Soft/shTDA7439<br>
 
 ***
 

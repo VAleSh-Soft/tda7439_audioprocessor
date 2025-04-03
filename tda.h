@@ -7,7 +7,7 @@
 void tda_init()
 {
   cur_mode = SET_VOLUME;
-  tda.begin();
+  tda.begin(&TDA7439_I2C_PORT);
   tda.mute();
 
   cur_volume = read_eeprom_8(EEPROM_INDEX_FOR_VOLUME);
@@ -45,7 +45,7 @@ void setInputData(TDA7439_input _input)
   // передать данные в TDA7439
   tda.setTimbre(cur_data.bass, cur_data.middle, cur_data.trebble);
   tda.setInputGain(cur_data.input_gain);
-  setBalance(cur_data.balance, cur_data.spk_att);
+  setBalance(cur_data.balance);
 
   TDA_PRINTLN(F("New input data for TDA7439"));
   TDA_PRINT(F("Input: "));
@@ -70,7 +70,7 @@ void setInputData(TDA7439_input _input)
   }
 }
 
-void setBalance(int8_t _balance, uint8_t _spk_att)
+void setBalance(int8_t _balance)
 {
   if (_balance > 14)
   {

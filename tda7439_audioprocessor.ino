@@ -208,7 +208,7 @@ void changeCurData(bool _up)
     break;
   case SET_BALANCE:
     _change_data(cur_data.balance, -14, 14, _up);
-    setBalance(cur_data.balance, cur_data.spk_att);
+    setBalance(cur_data.balance);
     printNumData(cur_data.balance);
     printProgressBar(cur_data.balance);
     TDA_PRINT(F("New balance set: "));
