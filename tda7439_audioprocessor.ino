@@ -164,7 +164,7 @@ void changeCurData(bool _up)
     break;
   case SET_BASS:
     _change_data(cur_data.bass, -7, 7, _up);
-    tda.setSnd(cur_data.bass, BASS);
+    tda.setEqRange(cur_data.bass, BASS);
     printNumData(cur_data.bass);
     printProgressBar(cur_data.bass);
     TDA_PRINT(F("New bass set: "));
@@ -172,7 +172,7 @@ void changeCurData(bool _up)
     break;
   case SET_MIDDLE:
     _change_data(cur_data.middle, -7, 7, _up);
-    tda.setSnd(cur_data.middle, MIDDLE);
+    tda.setEqRange(cur_data.middle, MIDDLE);
     printNumData(cur_data.middle);
     printProgressBar(cur_data.middle);
     TDA_PRINT(F("New middle set: "));
@@ -180,7 +180,7 @@ void changeCurData(bool _up)
     break;
   case SET_TREBBLE:
     _change_data(cur_data.trebble, -7, 7, _up);
-    tda.setSnd(cur_data.trebble, TREBBLE);
+    tda.setEqRange(cur_data.trebble, TREBBLE);
     printNumData(cur_data.trebble);
     printProgressBar(cur_data.trebble);
     TDA_PRINT(F("New trebble set: "));
@@ -200,7 +200,7 @@ void changeCurData(bool _up)
     x = cur_data.spk_att;
     _change_data(x, 0, 15, _up);
     cur_data.spk_att = x;
-    tda.spkAtt(cur_data.spk_att, cur_data.spk_att);
+    tda.setSpeakerAtt(cur_data.spk_att);
     printNumData(cur_data.spk_att);
     printProgressBar(cur_data.spk_att);
     TDA_PRINT(F("New speaker attenuation set: "));

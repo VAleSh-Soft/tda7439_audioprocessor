@@ -110,12 +110,12 @@ constexpr uint8_t ENC_BUTTON_PIN = 3; - пин кнопки энкодера (SW
 
 `constexpr uint8_t BT_CONTROL_LEVEL = HIGH;` - управляющий уровень для включения питания Bluetooth трансмиттера;
 
-- `constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10;` - индекс в EEPROM для сохранения текущей громкости (1 байт)
-- `constexpr uint16_t EEPROM_INDEX_FOR_INPUT = 11;` - индекс в EEPROM для сохранения текущего входа (1 байт)
-- `constexpr uint16_t EEPROM_INDEX_FOR_DATA_1 = 12;` - индекс в EEPROM для сохранения данных первого канала (6 байт)
-- `constexpr uint16_t EEPROM_INDEX_FOR_DATA_2 = 18;` - индекс в EEPROM для сохранения данных второго канала (6 байт)
-- `constexpr uint16_t EEPROM_INDEX_FOR_DATA_3 = 24;` - индекс в EEPROM для сохранения данных третьего канала (6 байт)
-- `constexpr uint16_t EEPROM_INDEX_FOR_DATA_4 = 30;` - индекс в EEPROM для сохранения данных четвертого канала (6 байт)
+`constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10;` - индекс в EEPROM для сохранения текущей громкости (1 байт)
+`constexpr uint16_t EEPROM_INDEX_FOR_INPUT = 11;` - индекс в EEPROM для сохранения текущего входа (1 байт)
+`constexpr uint16_t EEPROM_INDEX_FOR_DATA_1 = 12;` - индекс в EEPROM для сохранения данных первого канала (6 байт)
+`constexpr uint16_t EEPROM_INDEX_FOR_DATA_2 = 18;` - индекс в EEPROM для сохранения данных второго канала (6 байт)
+`constexpr uint16_t EEPROM_INDEX_FOR_DATA_3 = 24;` - индекс в EEPROM для сохранения данных третьего канала (6 байт)
+`constexpr uint16_t EEPROM_INDEX_FOR_DATA_4 = 30;` - индекс в EEPROM для сохранения данных четвертого канала (6 байт)
 
 
 #### Шина I2C

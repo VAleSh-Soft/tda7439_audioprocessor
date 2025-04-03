@@ -1,7 +1,7 @@
 #ifndef TDA_H
 #define TDA_H
 
-#include "TDA7439.h"
+#include <shTDA7439.h>
 #include "header_file.h"
 
 void tda_init()
@@ -43,9 +43,7 @@ void setInputData(TDA7439_input _input)
   readInputData(cur_data, cur_input);
 
   // передать данные в TDA7439
-  tda.setSnd(cur_data.bass, BASS);
-  tda.setSnd(cur_data.middle, MIDDLE);
-  tda.setSnd(cur_data.trebble, TREBBLE);
+  tda.setTimbre(cur_data.bass, cur_data.middle, cur_data.trebble);
   tda.setInputGain(cur_data.input_gain);
   setBalance(cur_data.balance, cur_data.spk_att);
 
@@ -83,14 +81,7 @@ void setBalance(int8_t _balance, uint8_t _spk_att)
     _balance = -14;
   }
 
-  if (_spk_att > 15)
-  {
-    _spk_att = 15;
-  }
-
-  uint8_t right = (_balance < 0) ? -2 * _balance + _spk_att : _spk_att;
-  uint8_t left = (_balance > 0) ? 2 * _balance + _spk_att : _spk_att;
-  tda.spkAtt(right, left);
+  tda.setBalance(_balance * 2);
 }
 
 void switchingInput(TDA7439_input _input, bool _init)

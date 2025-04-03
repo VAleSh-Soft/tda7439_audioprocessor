@@ -4,7 +4,7 @@
 #include <Rotary.h>        // https://github.com/brianlow/Rotary
 #include <shButton.h>      // https://github.com/VAleSh-Soft/shButton
 #include <shTaskManager.h> // https://github.com/VAleSh-Soft/shTaskManager
-#include "TDA7439.h"
+#include <shTDA7439.h>
 
 // ===================================================
 
@@ -338,5 +338,7 @@ inline uint8_t getInput(TDA7439_input obj) { return (4 - (uint8_t)obj); }
 inline TDA7439_input getInput(uint8_t obj) { return ((TDA7439_input)(4 - obj)); }
 
 // ===================================================
+
+shTDA7439 tda;
 
 #endif // _HEADER_FILE_
