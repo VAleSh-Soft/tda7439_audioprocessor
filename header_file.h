@@ -166,6 +166,7 @@ void tda_init();
 TDA7439_input readCurInput();            // получение сохраненного значения входа из EEPROM
 void setInputData(TDA7439_input _input); // первоначальная настройка TDA7439 для текущего входа
 void setBalance(int8_t _balance);        // установка баланса
+void setInputGain(int8_t _gain);         // установка предусиления / ослабления канала
 void switchingInput(TDA7439_input _input,
                     bool _init = false); // переключение входа
 
@@ -201,7 +202,9 @@ public:
       setBacklight(true);
       if (!tasks.getTaskState(return_to_default_mode))
       {
-        // если экран погашен, щелчок кнопкой просто включает его, не выполняя заложенное на щелчок действие; исключение - кнопки mute_btn и input_btn, они срабатывают в любом случае
+        /* если экран погашен, щелчок кнопкой просто включает его, не выполняя 
+        заложенное на щелчок действие; исключение - кнопки mute_btn и input_btn, 
+        они срабатывают в любом случае*/
         resetButtonState();
       }
 #endif

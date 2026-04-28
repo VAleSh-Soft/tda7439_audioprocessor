@@ -30,6 +30,20 @@ TDA7439_input readCurInput()
   return (TDA7439_input)inp;
 }
 
+void setInputGain(int8_t _gain)
+{
+  if (_gain < 0)
+  {
+    tda.setSpeakerAtt((uint8_t)(_gain * -1));
+    tda.setInputGain(0);
+  }
+  else
+  {
+    tda.setSpeakerAtt(0);
+    tda.setInputGain((uint8_t)_gain);
+  }
+}
+
 void setInputData(TDA7439_input _input)
 {
   tda.mute();
@@ -44,7 +58,8 @@ void setInputData(TDA7439_input _input)
 
   // передать данные в TDA7439
   tda.setTimbre(cur_data.bass, cur_data.middle, cur_data.trebble);
-  tda.setInputGain(cur_data.input_gain);
+  setInputGain (cur_data.input_gain);
+
   setBalance(cur_data.balance);
 
   TDA_PRINTLN(F("New input data for TDA7439"));
