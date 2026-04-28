@@ -264,16 +264,13 @@ void printProgressBar(int8_t _data)
   case SET_VOLUME:
     x = (_data % 3 < 1) ? _data / 3 : _data / 3 + 1;
     break;
-  case SET_INPUT_GAIN:
-  case SET_SPEAKER_ATT:
-    x = _data;
-    break;
   case SET_BASS:
   case SET_MIDDLE:
   case SET_TREBBLE:
     x = _data + 7;
     flat = false;
     break;
+  case SET_INPUT_GAIN:
   case SET_BALANCE:
     x = (_data + 14) / 2;
     flat = false;
@@ -334,10 +331,6 @@ void printCurScreen()
       _data = cur_data.input_gain;
       display.print(F("InputGane"));
       break;
-    case SET_SPEAKER_ATT:
-      _data = cur_data.spk_att;
-      display.print(F("SpeakerAtt"));
-    break;
     default:
       break;
     }

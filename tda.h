@@ -58,10 +58,8 @@ void setInputData(TDA7439_input _input)
   TDA_PRINTLN(cur_data.trebble);
   TDA_PRINT(F("Balance: "));
   TDA_PRINTLN(cur_data.balance);
-  TDA_PRINT(F("Input gain: "));
+  TDA_PRINT(F("Input att/gain: "));
   TDA_PRINTLN(cur_data.input_gain);
-  TDA_PRINT(F("Speaker attenuation: "));
-  TDA_PRINTLN(cur_data.spk_att);
   TDA_PRINTLN();
 
   if (!mute_flag)

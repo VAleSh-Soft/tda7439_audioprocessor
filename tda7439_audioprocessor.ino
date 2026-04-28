@@ -26,7 +26,7 @@ void setNewMode(bool gain_mode)
 {
   if (gain_mode)
   {
-    cur_mode = (cur_mode == SET_INPUT_GAIN) ? SET_SPEAKER_ATT : SET_INPUT_GAIN;
+    cur_mode = SET_INPUT_GAIN;
   }
   else
   {
@@ -195,16 +195,6 @@ void changeCurData(bool _up)
     printProgressBar(cur_data.input_gain);
     TDA_PRINT(F("New input gain set: "));
     TDA_PRINTLN(cur_data.input_gain);
-    break;
-  case SET_SPEAKER_ATT:
-    x = cur_data.spk_att;
-    _change_data(x, 0, 15, _up);
-    cur_data.spk_att = x;
-    tda.setSpeakerAtt(cur_data.spk_att);
-    printNumData(cur_data.spk_att);
-    printProgressBar(cur_data.spk_att);
-    TDA_PRINT(F("New speaker attenuation set: "));
-    TDA_PRINTLN(cur_data.spk_att);
     break;
   case SET_BALANCE:
     _change_data(cur_data.balance, -14, 14, _up);

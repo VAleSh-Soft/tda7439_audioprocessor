@@ -74,20 +74,21 @@ void readInputData(TDA_DATA &_data, TDA7439_input _input)
   _data.middle = _check_data(read_eeprom_8(index + 1), -7, 7);
   _data.trebble = _check_data(read_eeprom_8(index + 2), -7, 7);
   _data.balance = _check_data(read_eeprom_8(index + 3), -14, 14);
-  _data.input_gain = (read_eeprom_8(index + 4) > 15) ? 5 : read_eeprom_8(index + 4);
-  _data.spk_att = (read_eeprom_8(index + 5) > 15) ? 5 : read_eeprom_8(index + 5);
+  _data.input_gain = _check_data(read_eeprom_8(index + 4), -14, 14);
 }
 
 void writeInputData(TDA_DATA &_data, TDA7439_input _input)
 {
-  uint16_t index = cur_index[(uint8_t)_input];
+  if (!no_save_flag)
+  {
+    uint16_t index = cur_index[(uint8_t)_input];
 
-  write_eeprom_8(index, _data.bass);
-  write_eeprom_8(index + 1, _data.middle);
-  write_eeprom_8(index + 2, _data.trebble);
-  write_eeprom_8(index + 3, _data.balance);
-  write_eeprom_8(index + 4, _data.input_gain);
-  write_eeprom_8(index + 5, _data.spk_att);
+    write_eeprom_8(index, _data.bass);
+    write_eeprom_8(index + 1, _data.middle);
+    write_eeprom_8(index + 2, _data.trebble);
+    write_eeprom_8(index + 3, _data.balance);
+    write_eeprom_8(index + 4, _data.input_gain);
+  }
 }
 
 #endif // _EEPROM_H
