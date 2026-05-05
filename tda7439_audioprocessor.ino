@@ -61,8 +61,8 @@ void checkRotary()
 
       printCurScreen();
     }
-#endif
     else
+#endif
     {
       if (mute_flag) // если поднят флаг mute_flag, то первый щелчок энкодера просто его сбрасывает и только последующие щелчки регулируют текущий параметр
       {
@@ -187,9 +187,7 @@ void changeCurData(bool _up)
     TDA_PRINTLN(cur_data.trebble);
     break;
   case SET_INPUT_GAIN:
-    x = cur_data.input_gain;
-    _change_data(x, -14, -14, _up);
-    cur_data.input_gain = x;
+    _change_data(cur_data.input_gain, -14, 14, _up);
     setInputGain(cur_data.input_gain);
     printNumData(cur_data.input_gain);
     printProgressBar(cur_data.input_gain);
