@@ -257,7 +257,7 @@ void printProgressBar(int8_t _data)
 {
   display.setCursor(0, 1);
   uint8_t x = 0;
-  bool flat = true;
+  bool flat = true; // плоский прогресс-бар;  при false прогресс-бар с крестиком посередине
 
   switch (cur_mode)
   {
@@ -329,7 +329,7 @@ void printCurScreen()
       break;
     case SET_INPUT_GAIN:
       _data = cur_data.input_gain;
-      display.print(F("InputGane"));
+      display.print(F("InputGain"));
       break;
     default:
       break;
