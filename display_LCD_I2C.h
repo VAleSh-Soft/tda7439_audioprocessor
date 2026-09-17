@@ -11,7 +11,7 @@
 
 // ===================================================
 
-LiquidCrystal_PCF8574 display(0x27);
+LiquidCrystal_PCF8574 display(I2CADDR_FOR_DISPLAY);
 
 // ==== отрисовка больших цифр =======================
 
@@ -256,7 +256,7 @@ void printInData()
 void printProgressBar(int8_t _data)
 {
   display.setCursor(0, 1);
-  uint8_t x;
+  uint8_t x = 0;
   bool flat = true;
 
   switch (cur_mode)
@@ -300,7 +300,7 @@ void printCurScreen()
   display.clear();
   printInData();
 
-  int8_t _data;
+  int8_t _data = 0;
 
   if (cur_mode != SET_INPUT)
   {

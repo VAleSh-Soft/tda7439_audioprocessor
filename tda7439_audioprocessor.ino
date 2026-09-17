@@ -253,13 +253,8 @@ void ledGuard()
 
 void powerShutdownGuard()
 {
-  tda.mute(); // главное, что делает монитор напряжения питания - отключает звук при выключении, чтобы избежать щелчка в колонках
-#if BT_MODULE_IS_USED
-  digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
-#endif
   // если питание отключено, то запрещаем сохранение данных, т.к. есть риск, что питание пропадет в момент записи в EEPROM, и данные будут потеряны
   no_save_flag = true;
-  TDA_PRINTLN(F("The power of the device is shutdown"));
 }
 
 // ===================================================
@@ -297,7 +292,8 @@ void setup()
 
   // ---------------------------------------------------
 
-  attachInterrupt(0, powerShutdownGuard, FALLING);
+  pinMode(VOLTAGE_CONTROL_PIN, INPUT);
+  attachInterrupt(digitalPinToInterrupt(VOLTAGE_CONTROL_PIN), powerShutdownGuard, FALLING);
   no_save_flag = false;
 
   // ---------------------------------------------------
@@ -308,6 +304,18 @@ void setup()
 
 void loop()
 {
+  // если сработал монитор отключения питания
+  if (no_save_flag)
+  {
+    tda.mute(); // главное, что делает монитор напряжения питания - отключает звук при выключении, чтобы избежать щелчка в колонках
+#if BT_MODULE_IS_USED
+    digitalWrite(BT_POWER_PIN, !BT_CONTROL_LEVEL);
+#endif
+    TDA_PRINTLN(F("The power of the device is shutdown"));
+
+    while (true);
+  }
+
   tasks.tick();
   checkRotary();
 }

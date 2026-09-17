@@ -48,6 +48,7 @@ constexpr uint8_t MODE_BUTTON_PIN = 10; // пин кнопки для перек
 #if USE_INPUT_BUTTON
 constexpr uint8_t INPUT_BUTTON_PIN = 11; // пин кнопки для переключения входа
 #endif
+constexpr uint8_t I2CADDR_FOR_DISPLAY = 0x27; // адрес экрана на шине I2C
 
 constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10; // индекс в EEPROM для сохранения текущей громкости (1 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_INPUT = 11;  // индекс в EEPROM для сохранения текущего входа (1 байт)
@@ -202,8 +203,8 @@ public:
       setBacklight(true);
       if (!tasks.getTaskState(return_to_default_mode))
       {
-        /* если экран погашен, щелчок кнопкой просто включает его, не выполняя 
-        заложенное на щелчок действие; исключение - кнопки mute_btn и input_btn, 
+        /* если экран погашен, щелчок кнопкой просто включает его, не выполняя
+        заложенное на щелчок действие; исключение - кнопки mute_btn и input_btn,
         они срабатывают в любом случае*/
         resetButtonState();
       }
@@ -233,12 +234,18 @@ class tdaRotary : public Rotary
 {
 public:
   tdaRotary() : Rotary(ENC_A_PIN, ENC_B_PIN) {}
+
   unsigned char process()
   {
     unsigned char _state = Rotary::process();
     if (_state)
     {
       setBacklight(true);
+      if (!tasks.getTaskState(return_to_default_mode))
+      {
+        // если экран погашен, поворот энкодера просто включает его, не выполняя никаких действий
+        _state = DIR_NONE;
+      }
       tasks.startTask(return_to_default_mode);
       tasks.startTask(save_settings_in_eeprom);
     }
@@ -311,6 +318,8 @@ static TDA7439_input getPrevInput(const TDA7439_input obj)
 #else
     return (INPUT_4);
 #endif
+  default:
+    return (INPUT_1);
   }
 }
 

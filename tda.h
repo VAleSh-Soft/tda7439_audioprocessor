@@ -11,7 +11,7 @@ void tda_init()
   tda.mute();
 
   cur_volume = read_eeprom_8(EEPROM_INDEX_FOR_VOLUME);
-  if (cur_volume > 48 || cur_volume == 0)
+  if (cur_volume > 47 || cur_volume == 0)
   {
     cur_volume = 20;
   }
