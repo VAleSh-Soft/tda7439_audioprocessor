@@ -48,6 +48,7 @@ constexpr uint8_t MODE_BUTTON_PIN = 10; // пин кнопки для перек
 #if USE_INPUT_BUTTON
 constexpr uint8_t INPUT_BUTTON_PIN = 11; // пин кнопки для переключения входа
 #endif
+
 constexpr uint8_t I2CADDR_FOR_DISPLAY = 0x27; // адрес экрана на шине I2C
 
 constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10; // индекс в EEPROM для сохранения текущей громкости (1 байт)
