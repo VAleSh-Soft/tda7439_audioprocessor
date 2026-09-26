@@ -16,7 +16,7 @@ void setMute()
     }
     else
     {
-      tda.setVolume(cur_volume);
+      tda.setVolume(cur_data.volume);
     }
   }
   printCurScreen();
@@ -64,11 +64,11 @@ void checkRotary()
     else
 #endif
     {
-      if (mute_flag) // если поднят флаг mute_flag, то первый щелчок энкодера просто его сбрасывает и только последующие щелчки регулируют текущий параметр
+      // если поднят флаг mute_flag, то первый щелчок энкодера просто его 
+      // сбрасывает и только последующие щелчки регулируют текущий параметр
+      if (mute_flag) 
       {
-        mute_flag = false;
-        tda.setVolume(cur_volume);
-        printCurScreen();
+        setMute();
       }
       else
       {
@@ -152,15 +152,15 @@ void changeCurData(bool _up)
   switch (cur_mode)
   {
   case SET_VOLUME:
-    x = cur_volume;
+    x = cur_data.volume;
     _change_data(x, 0, 47, _up);
-    cur_volume = x;
+    cur_data.volume = x;
     mute_flag = false;
-    tda.setVolume(cur_volume);
-    printNumData(cur_volume);
-    printProgressBar(cur_volume);
+    tda.setVolume(cur_data.volume);
+    printNumData(cur_data.volume);
+    printProgressBar(cur_data.volume);
     TDA_PRINT(F("New volume set: "));
-    TDA_PRINTLN(cur_volume);
+    TDA_PRINTLN(cur_data.volume);
     break;
   case SET_BASS:
     _change_data(cur_data.bass, -7, 7, _up);
@@ -178,13 +178,13 @@ void changeCurData(bool _up)
     TDA_PRINT(F("New middle set: "));
     TDA_PRINTLN(cur_data.middle);
     break;
-  case SET_TREBBLE:
-    _change_data(cur_data.trebble, -7, 7, _up);
-    tda.setEqRange(cur_data.trebble, TREBBLE);
-    printNumData(cur_data.trebble);
-    printProgressBar(cur_data.trebble);
-    TDA_PRINT(F("New trebble set: "));
-    TDA_PRINTLN(cur_data.trebble);
+  case SET_TREBLE:
+    _change_data(cur_data.treble, -7, 7, _up);
+    tda.setEqRange(cur_data.treble, TREBLE);
+    printNumData(cur_data.treble);
+    printProgressBar(cur_data.treble);
+    TDA_PRINT(F("New treble set: "));
+    TDA_PRINTLN(cur_data.treble);
     break;
   case SET_INPUT_GAIN:
     _change_data(cur_data.input_gain, -14, 14, _up);
@@ -222,7 +222,6 @@ void returnToDefMode()
 void saveSettingsInEeprom()
 {
   tasks.stopTask(save_settings_in_eeprom);
-  write_eeprom_8(EEPROM_INDEX_FOR_VOLUME, cur_volume);
   writeInputData(cur_data, cur_input);
 }
 
@@ -313,7 +312,8 @@ void loop()
 #endif
     TDA_PRINTLN(F("The power of the device is shutdown"));
 
-    while (true);
+    while (true)
+      ;
   }
 
   tasks.tick();

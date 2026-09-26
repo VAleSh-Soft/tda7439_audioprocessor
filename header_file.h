@@ -22,7 +22,7 @@
 // ===================================================
 
 constexpr uint32_t TIMEOUT_OF_RETURN_TO_DEFMODE = 10; // таймаут автовозврата в режим по умолчанию, секунд
-constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 5;      // таймаут задержки автосохранения настроек, секунд
+constexpr uint32_t TIMEOUT_OF_AUTOSAVE_DATA = 2;      // таймаут задержки автосохранения настроек, секунд
 
 constexpr bool INT_PULLUP_OF_ROTARY_PINS = true; // используется внутренняя подтяжка пинов к VCC, установите false, если ваш модуль энкодера использует внешнюю подтяжку
 
@@ -51,7 +51,6 @@ constexpr uint8_t INPUT_BUTTON_PIN = 11; // пин кнопки для пере�
 
 constexpr uint8_t I2CADDR_FOR_DISPLAY = 0x27; // адрес экрана на шине I2C
 
-constexpr uint16_t EEPROM_INDEX_FOR_VOLUME = 10; // индекс в EEPROM для сохранения текущей громкости (1 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_INPUT = 11;  // индекс в EEPROM для сохранения текущего входа (1 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_DATA_1 = 12; // индекс в EEPROM для сохранения данных первого канала (6 байт)
 constexpr uint16_t EEPROM_INDEX_FOR_DATA_2 = 18; // индекс в EEPROM для сохранения данных второго канала (6 байт)
@@ -84,9 +83,10 @@ struct TDA_DATA // структура с данными настройки дл�
 {
   int8_t bass;
   int8_t middle;
-  int8_t trebble;
+  int8_t treble;
   int8_t balance;
   int8_t input_gain;
+  uint8_t volume;
 };
 
 // ===================================================
@@ -96,7 +96,7 @@ enum TDA_CUR_MODE : uint8_t // режим работы модуля
   SET_VOLUME,     // установка громкости
   SET_BASS,       // установка низких частот
   SET_MIDDLE,     // установка средних частот
-  SET_TREBBLE,    // установка высоких частот
+  SET_TREBLE,     // установка высоких частот
   SET_BALANCE,    // установка баланса
   SET_INPUT_GAIN, // установка предусиления/ослабления канала
   SET_INPUT       // установка входа
@@ -111,8 +111,8 @@ static TDA_CUR_MODE getNextMode(const TDA_CUR_MODE obj)
   case SET_BASS:
     return (SET_MIDDLE);
   case SET_MIDDLE:
-    return (SET_TREBBLE);
-  case SET_TREBBLE:
+    return (SET_TREBLE);
+  case SET_TREBLE:
     return (SET_BALANCE);
   case SET_BALANCE:
     return (SET_VOLUME);
@@ -231,6 +231,19 @@ tdaButton input_btn(INPUT_BUTTON_PIN); // пин кнопки для перек�
 
 // ===================================================
 
+TDA_CUR_MODE cur_mode = SET_VOLUME;   // текущий режим работы модуля
+TDA7439_input cur_input = INPUT_1;    // текущий вход
+TDA7439_input next_input = cur_input; // вход для переключения
+bool new_input = false;               // флаг необходимости переключения входа
+
+bool mute_flag = false;             // флаг отключения звука
+bool no_mute = false;               // флаг запрета отключения звука
+volatile bool no_save_flag = false; // флаг запрета сохранения настроек; если поднят,
+                                    // значит сработал монитор пропадания напряжения питания
+TDA_DATA cur_data;                  // данные для настройки текущего канала
+
+// ===================================================
+
 class tdaRotary : public Rotary
 {
 public:
@@ -241,12 +254,19 @@ public:
     unsigned char _state = Rotary::process();
     if (_state)
     {
+#if TURN_OFF_SCREEN_BACKLIGHT
       setBacklight(true);
       if (!tasks.getTaskState(return_to_default_mode))
       {
         // если экран погашен, поворот энкодера просто включает его, не выполняя никаких действий
         _state = DIR_NONE;
+        // если поднят флаг mute_flag, то первый щелчок энкодера просто его сбрасывает
+        if (mute_flag)
+        {
+          setMute();
+        }
       }
+#endif
       tasks.startTask(return_to_default_mode);
       tasks.startTask(save_settings_in_eeprom);
     }
@@ -255,19 +275,6 @@ public:
 };
 
 tdaRotary enc;
-
-// ===================================================
-
-TDA_CUR_MODE cur_mode = SET_VOLUME;   // текущий режим работы модуля
-TDA7439_input cur_input = INPUT_1;    // текущий вход
-TDA7439_input next_input = cur_input; // вход для переключения
-bool new_input = false;               // флаг необходимости переключения входа
-
-uint8_t cur_volume = 20;            // текущая громкость
-bool mute_flag = false;             // флаг отключения звука
-bool no_mute = false;               // флаг запрета отключения звука
-volatile bool no_save_flag = false; // флаг запрета сохранения настроек; если поднят, значит сработал монитор пропадания напряжения питания
-TDA_DATA cur_data;                  // данные для настройки текущего канала
 
 // ===================================================
 

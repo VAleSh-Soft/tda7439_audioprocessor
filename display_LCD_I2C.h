@@ -266,7 +266,7 @@ void printProgressBar(int8_t _data)
     break;
   case SET_BASS:
   case SET_MIDDLE:
-  case SET_TREBBLE:
+  case SET_TREBLE:
     x = _data + 7;
     flat = false;
     break;
@@ -308,7 +308,7 @@ void printCurScreen()
     switch (cur_mode)
     {
     case SET_VOLUME:
-      _data = (mute_flag) ? 0 : cur_volume;
+      _data = (mute_flag) ? 0 : cur_data.volume;
       display.print(F("  Volume"));
       break;
     case SET_BASS:
@@ -319,9 +319,9 @@ void printCurScreen()
       _data = cur_data.middle;
       display.print(F("  Middle"));
       break;
-    case SET_TREBBLE:
-      _data = cur_data.trebble;
-      display.print(F("  Trebble"));
+    case SET_TREBLE:
+      _data = cur_data.treble;
+      display.print(F("  treble"));
       break;
     case SET_BALANCE:
       _data = cur_data.balance;

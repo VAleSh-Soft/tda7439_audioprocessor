@@ -10,12 +10,6 @@ void tda_init()
   tda.begin(&TDA7439_I2C_PORT);
   tda.mute();
 
-  cur_volume = read_eeprom_8(EEPROM_INDEX_FOR_VOLUME);
-  if (cur_volume > 47 || cur_volume == 0)
-  {
-    cur_volume = 20;
-  }
-
   switchingInput(readCurInput(), true);
 }
 
@@ -57,20 +51,22 @@ void setInputData(TDA7439_input _input)
   readInputData(cur_data, cur_input);
 
   // передать данные в TDA7439
-  tda.setTimbre(cur_data.bass, cur_data.middle, cur_data.trebble);
-  setInputGain (cur_data.input_gain);
+  tda.setTimbre(cur_data.bass, cur_data.middle, cur_data.treble);
+  setInputGain(cur_data.input_gain);
 
   setBalance(cur_data.balance);
 
   TDA_PRINTLN(F("New input data for TDA7439"));
   TDA_PRINT(F("Input: "));
   TDA_PRINTLN(getInput(cur_input));
+  TDA_PRINT(F("Volume: "));
+  TDA_PRINTLN(cur_data.volume);
   TDA_PRINT(F("Bass: "));
   TDA_PRINTLN(cur_data.bass);
   TDA_PRINT(F("Middle: "));
   TDA_PRINTLN(cur_data.middle);
-  TDA_PRINT(F("Trebble: "));
-  TDA_PRINTLN(cur_data.trebble);
+  TDA_PRINT(F("treble: "));
+  TDA_PRINTLN(cur_data.treble);
   TDA_PRINT(F("Balance: "));
   TDA_PRINTLN(cur_data.balance);
   TDA_PRINT(F("Input att/gain: "));
@@ -79,7 +75,7 @@ void setInputData(TDA7439_input _input)
 
   if (!mute_flag)
   {
-    tda.setVolume(cur_volume);
+    tda.setVolume(cur_data.volume);
   }
 }
 

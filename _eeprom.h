@@ -72,9 +72,14 @@ void readInputData(TDA_DATA &_data, TDA7439_input _input)
 
   _data.bass = _check_data(read_eeprom_8(index), -7, 7);
   _data.middle = _check_data(read_eeprom_8(index + 1), -7, 7);
-  _data.trebble = _check_data(read_eeprom_8(index + 2), -7, 7);
+  _data.treble = _check_data(read_eeprom_8(index + 2), -7, 7);
   _data.balance = _check_data(read_eeprom_8(index + 3), -14, 14);
   _data.input_gain = _check_data(read_eeprom_8(index + 4), -14, 14);
+  _data.volume = read_eeprom_8(index + 5);
+  if (_data.volume > 47)
+  {
+    _data.volume = 20;
+  }
 }
 
 void writeInputData(TDA_DATA &_data, TDA7439_input _input)
@@ -85,9 +90,10 @@ void writeInputData(TDA_DATA &_data, TDA7439_input _input)
 
     write_eeprom_8(index, _data.bass);
     write_eeprom_8(index + 1, _data.middle);
-    write_eeprom_8(index + 2, _data.trebble);
+    write_eeprom_8(index + 2, _data.treble);
     write_eeprom_8(index + 3, _data.balance);
     write_eeprom_8(index + 4, _data.input_gain);
+    write_eeprom_8(index + 5, _data.volume);
   }
 }
 
